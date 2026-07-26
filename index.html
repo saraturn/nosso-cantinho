@@ -28,21 +28,23 @@ body{font-family:'Nunito',sans-serif;background:#050d1a;color:var(--ink);min-hei
 }
 #loginScreen canvas{position:absolute;inset:0;}
 .login-box{
-  position:relative;z-index:2;
+position:relative;
+  z-index:2;
   background:rgba(255,255,255,0.07);
   border:1.5px solid rgba(168,200,232,0.3);
   border-radius:20px;
   padding:2.5rem 2rem;
-  width:320px;
+  width:400px;
   text-align:center;
   backdrop-filter:blur(10px);
 }
 .login-box h1{
-  font-family:'Bangers',cursive;
+ font-family:'Bangers',cursive;
   font-size:2rem;
   color:white;
   letter-spacing:3px;
   margin-bottom:.3rem;
+  white-space:nowrap;
 }
 .login-box p{color:rgba(168,200,232,.8);font-size:.85rem;margin-bottom:1.5rem;}
 .login-box input{
@@ -679,7 +681,7 @@ button.primary:hover{background:#1a5a8a;}
   <canvas id="loginStars"></canvas>
   <div class="login-box">
     <h1>☁ Nosso Cantinho ☁</h1>
-    <p>Espaço só nosso 💙</p>
+    <p>Ici, nous sommes chez nous..・。.・゜✭</p>
     <input type="text" id="loginUser" placeholder="Nome" autocomplete="off"/>
     <input type="password" id="loginPass" placeholder="Senha"/>
     <button class="login-btn" onclick="doLogin()">Entrar</button>
@@ -707,10 +709,10 @@ button.primary:hover{background:#1a5a8a;}
     width:90%;
   ">
     <div style="font-family:'Bangers',cursive;font-size:1.6rem;color:white;letter-spacing:2px;margin-bottom:.3rem;">
-      ☁ Nosso Cantinho ☁
+    Nosso primeiro date ♡
     </div>
     <div style="font-size:.82rem;color:rgba(168,200,232,.7);margin-bottom:.2rem;">
-      O céu de vocês — 18/02/2026 às 21:00
+      Meus olhos brilhavam ao olhar para você. E em 18/02/2026 o céu estava assim:
     </div>
     <div style="font-size:.75rem;color:rgba(168,200,232,.45);margin-bottom:1rem;">
       Arraste para explorar · Passe o mouse nas estrelas
@@ -723,7 +725,7 @@ button.primary:hover{background:#1a5a8a;}
       font-family:'Bangers',cursive;
       font-size:1.1rem;letter-spacing:2px;
       transition:.15s;
-    ">Entrar 💙</button>
+    ">Entrar</button>
   </div>
 </div>
   <canvas id="starCanvas"></canvas>
@@ -739,7 +741,7 @@ button.primary:hover{background:#1a5a8a;}
     </header>
 
     <div class="counter">
-      <div style="font-family:'Bangers';font-size:.85rem;letter-spacing:2px;opacity:.7;margin-bottom:.4rem;">💙 JUNTAS HÁ 💙</div>
+      <div style="font-family:'Bangers';font-size:.85rem;letter-spacing:2px;opacity:.7;margin-bottom:.4rem;">Desfrutando dos melhores sentimentos desde</div>
       <div class="counter-grid">
         <div class="box"><div class="num" id="cy">0</div><div style="font-size:.6rem;font-weight:700;color:rgba(168,200,232,.8);">ANOS</div></div>
         <div class="box"><div class="num" id="cmo">0</div><div style="font-size:.6rem;font-weight:700;color:rgba(168,200,232,.8);">MESES</div></div>
@@ -751,13 +753,13 @@ button.primary:hover{background:#1a5a8a;}
     </div>
 
     <nav id="nav">
-      <button class="active" onclick="tab(this,'mem')">📸 Memórias</button>
-      <button onclick="tab(this,'lem')">📌 Lembretes</button>
-      <button onclick="tab(this,'dia')">📖 Diário</button>
-      <button onclick="tab(this,'cal')">🗓️ Calendário</button>
-      <button onclick="tab(this,'news')">📰 Notícias</button>
-      <button onclick="tab(this,'jogos')">🎮 Jogos</button>
-      <button onclick="tab(this,'cuidados')">🩺 Cuidados</button>
+      <button class="active" onclick="tab(this,'mem')">Memórias</button>
+      <button onclick="tab(this,'lem')">Lembretes</button>
+      <button onclick="tab(this,'dia')">Diário</button>
+      <button onclick="tab(this,'cal')"> Calendário</button>
+      <button onclick="tab(this,'news')">Notícias</button>
+      <button onclick="tab(this,'jogos')">Jogos</button>
+      <button onclick="tab(this,'cuidados')">Cuidados</button>
       <button id="admBtn" onclick="tab(this,'adm')" style="display:none;">⚙️ ADM</button>
     </nav>
 
@@ -766,9 +768,9 @@ button.primary:hover{background:#1a5a8a;}
       <h2>📸 Memórias</h2>
       <label>📷 Escolher foto</label>
       <input type="file" id="mfile" accept="image/*"/>
-      <label>✍️ Legenda (obrigatória)</label>
+      <label>Legenda (obrigatória)</label>
       <input type="text" id="mcap" placeholder="Escreva uma legenda..."/>
-      <button class="primary" onclick="addMem()">Guardar Memória 💙</button>
+      <button class="primary" onclick="addMem()">Guardar Memória</button>
       <div class="mgrid" id="mgrid"></div>
     </div>
 
@@ -928,17 +930,17 @@ button.primary:hover{background:#1a5a8a;}
         </div>
         <!-- Paleta rápida -->
         <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;">
-          ${['#000000','#ffffff','#ff0000','#ff6600','#ffdd00','#00aa00','#0066ff','#9900cc','#ff69b4','#00cccc','#8B4513','#F5F0E8'].map(c=>
-            `<div onclick="document.getElementById('corPrincipal').value='${c}'"
-              style="width:22px;height:22px;background:${c};border-radius:4px;cursor:pointer;border:1.5px solid rgba(255,255,255,.3);"></div>`
-          ).join('')}
+            
+            <div onclick="document.getElementById('corPrincipal').value='${c}'"
+              style="width:22px;height:22px;background:${c};border-radius:4px;cursor:pointer;border:1.5px solid rgba(255,255,255,.3);"></div>
+         
         </div>
         <!-- Ações -->
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
           <button class="primary" onclick="desfazer()">↩ Desfazer</button>
           <button class="primary" onclick="refazer()">↪ Refazer</button>
-          <button class="primary" onclick="limparCanvas()">🗑️ Limpar</button>
-          <button class="primary" onclick="baixarDesenho()">⬇️ Baixar</button>
+          <button class="primary" onclick="limparCanvas()">Limpar</button>
+          <button class="primary" onclick="baixarDesenho()">Baixar</button>
           <button class="primary" onclick="salvarNaGaleria(false)">💾 Salvar na Galeria</button>
         </div>
       </div>
@@ -1065,7 +1067,7 @@ button.primary:hover{background:#1a5a8a;}
       </div>
 
       <label style="margin-top:.8rem;">📝 Observações</label>
-      <textarea id="regObs" rows="2" placeholder="Como a vovó estava hoje? Tomou os medicamentos? Algo diferente?"></textarea>
+      <textarea id="regObs" rows="2" placeholder="Como a sua avó estava hoje? Tomou os medicamentos? Algo diferente?"></textarea>
 
       <div style="display:flex;gap:8px;margin-top:.8rem;flex-wrap:wrap;align-items:center;">
         <div>
@@ -1355,28 +1357,53 @@ function initStars(canvasId){
 
   // Canvas de login: só estrelas simples sem interação
   if(canvasId==='loginStars'){
-    const s=[];
-    for(let i=0;i<200;i++){
-      s.push({x:Math.random(),y:Math.random(),r:Math.random()*.8+.2,tw:Math.random()*3+1,tp:Math.random()*Math.PI*2});
-    }
-    function drawLogin(){
-      const W=canvas.width,H=canvas.height;
-      ctx.fillStyle='#050d1a';ctx.fillRect(0,0,W,H);
-      const t=Date.now()/1000;
-      s.forEach(st=>{
-        const tw=0.7+0.3*Math.sin(t/st.tw+st.tp);
-        ctx.beginPath();
-        ctx.arc(st.x*W,st.y*H,st.r*tw,0,Math.PI*2);
-        ctx.shadowBlur=3;ctx.shadowColor='rgba(168,200,232,.5)';
-        ctx.fillStyle=`rgba(200,220,255,${0.4+0.4*tw})`;
-        ctx.fill();
-      });
-      ctx.shadowBlur=0;
-      requestAnimationFrame(drawLogin);
-    }
-    drawLogin();
-    return;
+  const W=()=>canvas.width, H=()=>canvas.height;
+
+  // ESTRELAS
+  const stars=[];
+  for(let i=0;i<280;i++){
+    stars.push({
+      x:Math.random(), y:Math.random(),
+      r:Math.random()*1.2+0.2,
+      tw:Math.random()*4+1,
+      tp:Math.random()*Math.PI*2,
+      alpha:Math.random()*0.5+0.3,
+    });
   }
+  
+  function drawLoginScene(){
+    const cw=canvas.width, ch=canvas.height;
+    const t=Date.now()/1000;
+    // Estrelas de fundo
+    stars.forEach(s=>{
+      const tw=0.6+0.4*Math.sin(t/s.tw+s.tp);
+      // Evita o centro (caixa de login)
+      const cx=s.x*cw, cy=s.y*ch;
+      const distCentro=Math.sqrt((cx-cw/2)**2+(cy-ch/2)**2);
+      const alphaFade=distCentro<Math.min(cw,ch)*0.22?
+        Math.max(0,(distCentro-Math.min(cw,ch)*0.12)/(Math.min(cw,ch)*0.10)):1;
+      ctx.beginPath();
+      ctx.arc(cx,cy,s.r*tw,0,Math.PI*2);
+      ctx.shadowBlur=s.r>0.9?6:2;
+      ctx.shadowColor='rgba(168,200,232,0.6)';
+      ctx.fillStyle=`rgba(210,228,255,${s.alpha*tw*alphaFade})`;
+      ctx.fill();
+    });
+    ctx.shadowBlur=0;
+
+    // Brilho suave atrás da caixa de login (centro)
+    const glowCenter=ctx.createRadialGradient(cw/2,ch/2,0,cw/2,ch/2,Math.min(cw,ch)*0.28);
+    glowCenter.addColorStop(0,'rgba(27,58,107,0.18)');
+    glowCenter.addColorStop(0.5,'rgba(20,40,90,0.08)');
+    glowCenter.addColorStop(1,'transparent');
+    ctx.fillStyle=glowCenter;
+    ctx.fillRect(0,0,cw,ch);
+
+    requestAnimationFrame(drawLoginScene);
+  }
+  drawLoginScene();
+  return;
+}
 
   // Canvas principal: céu interativo
   if(!starsWorld) starsWorld=gerarEstrelasFundo();
@@ -1525,7 +1552,7 @@ function initStars(canvasId){
       ctx.fillStyle='rgba(168,200,232,.9)';
       ctx.font='13px Nunito';
       ctx.textAlign='center';
-      ctx.fillText('✨ Arraste para explorar o céu de vocês',W/2,H-44);
+      ctx.fillText('✨ Arraste para explorar o céu W/2,H-44);
       ctx.fillText('18/02/2026 · 21:00 · Piripiri, PI',W/2,H-26);
       ctx.restore();
     }
