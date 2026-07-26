@@ -1673,7 +1673,7 @@ function doLogin(){
   currentUser=u;
   document.getElementById('loginScreen').style.display='none';
   document.getElementById('app').style.display='block';
-  document.getElementById('userLabel').textContent=(u.adm?'👑 ':'👤 ')+u.name;
+  document.getElementById('userLabel').textContent=(u.adm?'👑 ':'👑 ')+u.name;
   if(u.adm){document.getElementById('admBtn').style.display='inline-block';}
   // Mostra o céu PRIMEIRO
   document.getElementById('telaBoasVindas').style.display='flex';
