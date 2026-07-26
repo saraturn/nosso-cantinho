@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Nosso Cantinho</title>
 <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;600;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
   --cream:#F5F0E8;
@@ -1573,23 +1574,97 @@ function initStars(canvasId){
 // ══════════════════════════════════════════════════════
 // LOGIN
 // ══════════════════════════════════════════════════════
-function ld(k,d){try{const v=localStorage.getItem(k);return v!==null?JSON.parse(v):d;}catch(e){return d;}}
-function sv(k,v){localStorage.setItem(k,JSON.stringify(v));}
+// ══ SUPABASE — dados compartilhados entre os dois ══
+const SUPABASE_URL = 'https://uxsampkqojjsmlxvsrvr.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_BxLokoQPPGbo3GLc23KYqw_vnzY0H02';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Inicializa usuários padrão se não existirem
+let cache = {};
+let cacheReady = false;
+
+function ld(k,d){ return (k in cache) ? cache[k] : d; }
+
+function sv(k,v){
+  cache[k]=v;
+  sb.from('dados').upsert({key:k, value:v, updated_at:new Date().toISOString()})
+    .then(({error})=>{ if(error) console.error('Erro ao salvar '+k, error); });
+}
+
 function initUsers(){
-  if(!localStorage.getItem('nc_users')){
+  if(!cache['nc_users']){
     sv('nc_users',[
       {name:'Nayelle',pass:'19032006',adm:true},
       {name:'Lia',pass:'25052001',adm:false}
     ]);
   }
 }
-initUsers();
+
+function atualizarStatusLogin(){
+  const btn=document.querySelector('.login-btn');
+  const err=document.getElementById('loginErr');
+  if(cacheReady){
+    btn.disabled=false;
+    if(err.textContent==='Carregando dados...') err.textContent='';
+  } else {
+    btn.disabled=true;
+    err.textContent='Carregando dados...';
+  }
+}
+
+async function carregarCacheInicial(){
+  atualizarStatusLogin();
+  const {data,error}=await sb.from('dados').select('key,value');
+  if(!error && data) data.forEach(row=>{ cache[row.key]=row.value; });
+  initUsers();
+  inicializarVariaveis();
+  cacheReady=true;
+  atualizarStatusLogin();
+}
+
+function inicializarVariaveis(){
+  mems=ld('nc3_m',[]);
+  if(!mems.length){
+    mems.push({img:'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=400',cap:'Nossa primeira memória 💙',r:-2});
+    sv('nc3_m',mems);
+  }
+  lemb=ld('nc3_l',[]);
+  dia=ld('nc3_d',[]);
+  notes=ld('nc3_n',{});
+  temaCustom=ld('nc3_temas',{});
+  galeriaDesenhos=ld('nc3_galeria',[]);
+  registros=ld('nc3_reg',[]);
+}
+
+function aplicarMudancaRemota(key){
+  if(!currentUser) return;
+  if(key==='nc3_m'){ mems=cache['nc3_m']||[]; renderMem(); }
+  if(key==='nc3_l'){ lemb=cache['nc3_l']||[]; renderL(); }
+  if(key==='nc3_d'){ dia=cache['nc3_d']||[]; renderD(); }
+  if(key==='nc3_n'){ notes=cache['nc3_n']||{}; renderCal(); }
+  if(key==='nc3_temas'){ temaCustom=cache['nc3_temas']||{}; renderCal(); }
+  if(key==='nc3_galeria'){ galeriaDesenhos=cache['nc3_galeria']||[]; renderGaleria(); }
+  if(key==='nc3_reg'){ registros=cache['nc3_reg']||[]; renderRegistros(); renderGrafico(graficoAtual); }
+  if(key==='nc_users'){ renderUsers(); }
+}
+
+function iniciarRealtime(){
+  sb.channel('dados-changes')
+    .on('postgres_changes',{event:'*',schema:'public',table:'dados'},payload=>{
+      const row=payload.new && Object.keys(payload.new).length ? payload.new : payload.old;
+      if(!row || !row.key) return;
+      cache[row.key]=row.value;
+      aplicarMudancaRemota(row.key);
+    })
+    .subscribe();
+}
+
+carregarCacheInicial();
+iniciarRealtime();
 
 let currentUser=null;
-
+  
 function doLogin(){
+  if(!cacheReady) return;
   const name=document.getElementById('loginUser').value.trim();
   const pass=document.getElementById('loginPass').value.trim();
   const users=ld('nc_users',[]);
@@ -1664,10 +1739,7 @@ function tab(btn,id){
 // ══════════════════════════════════════════════════════
 // MEMÓRIAS
 // ══════════════════════════════════════════════════════
-let mems=ld('nc3_m',[]);
-if(!mems.length){
-  mems.push({img:'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=400',cap:'Nossa primeira memória 💙',r:-2});
-  sv('nc3_m',mems);
+let mems=[];
 }
 function addMem(){
   const file=document.getElementById('mfile').files[0];
@@ -1699,7 +1771,7 @@ function renderMem(){
 // ══════════════════════════════════════════════════════
 // LEMBRETES
 // ══════════════════════════════════════════════════════
-let lemb=ld('nc3_l',[]);
+let lemb=[];
 function addL(){
   const v=document.getElementById('linp').value.trim();
   if(!v)return;
@@ -1718,7 +1790,7 @@ function renderL(){
 // ══════════════════════════════════════════════════════
 // DIÁRIO COM CADEADO
 // ══════════════════════════════════════════════════════
-let dia=ld('nc3_d',[]);
+let dia=[];
 let pinMode=null; // 'create' ou 'unlock'
 let pinBuffer='';
 let pinTargetIdx=-1;
@@ -1834,8 +1906,8 @@ function confirmPin(){
 // ══════════════════════════════════════════════════════
 // CALENDÁRIO
 // ══════════════════════════════════════════════════════
-let notes=ld('nc3_n',{});
-let temaCustom=ld('nc3_temas',{});
+let notes={};
+let temaCustom={};
 let cY=new Date().getFullYear();
 let cMo=new Date().getMonth();
 let selD=null;
@@ -2168,7 +2240,7 @@ let toolAtual='pen';
 let undoStack=[], redoStack=[];
 let startX=0, startY=0;
 let snapShot=null;
-let galeriaDesenhos=ld('nc3_galeria',[]);
+let galeriaDesenhos=[];
 let activeCanvasId='desenhoCanvas';
 
 const DESAFIOS_SEMANAIS=[
@@ -2499,7 +2571,7 @@ document.getElementById('modalDesenho').onclick=function(e){
 // ══════════════════════════════════════════════════════
 // CUIDADOS
 // ══════════════════════════════════════════════════════
-let registros=ld('nc3_reg',[]);
+let registros=[];
 let graficoAtual='glicose';
 
 function switchCuidadosTab(tab){
