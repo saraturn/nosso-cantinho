@@ -1,0 +1,3078 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nosso Cantinho</title>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;600;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#F5F0E8;
+  --blue:#1B3A6B;
+  --blue2:#2E6DA4;
+  --blue3:#A8C8E8;
+  --red:#C0392B;
+  --ink:#1A1A2E;
+  --gold:#F4D03F;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:#050d1a;color:var(--ink);min-height:100vh;overflow-x:hidden;}
+
+/* ══════════════════════════════
+   TELA DE LOGIN
+══════════════════════════════ */
+#loginScreen{
+  position:fixed;inset:0;z-index:9999;
+  display:flex;align-items:center;justify-content:center;
+  background:#050d1a;
+}
+#loginScreen canvas{position:absolute;inset:0;}
+.login-box{
+position:relative;
+  z-index:2;
+  background:rgba(255,255,255,0.07);
+  border:1.5px solid rgba(168,200,232,0.3);
+  border-radius:20px;
+  padding:2.5rem 2rem;
+  width:400px;
+  text-align:center;
+  backdrop-filter:blur(10px);
+}
+.login-box h1{
+ font-family:'Bangers',cursive;
+  font-size:2rem;
+  color:white;
+  letter-spacing:3px;
+  margin-bottom:.3rem;
+  white-space:nowrap;
+}
+.login-box p{color:rgba(168,200,232,.8);font-size:.85rem;margin-bottom:1.5rem;}
+.login-box input{
+  width:100%;padding:10px 14px;
+  border:1.5px solid rgba(168,200,232,.4);
+  border-radius:10px;
+  background:rgba(255,255,255,.08);
+  color:white;font-size:.95rem;
+  font-family:'Nunito',sans-serif;
+  margin-bottom:.8rem;outline:none;
+}
+.login-box input::placeholder{color:rgba(255,255,255,.35);}
+.login-box input:focus{border-color:var(--blue3);}
+.login-btn{
+  width:100%;padding:11px;
+  background:var(--blue2);
+  color:white;border:none;
+  border-radius:10px;cursor:pointer;
+  font-family:'Bangers',cursive;
+  font-size:1.1rem;letter-spacing:1.5px;
+  margin-top:.3rem;transition:.15s;
+}
+.login-btn:hover{background:#1a5a8a;}
+.login-err{color:#e74c3c;font-size:.82rem;margin-top:.5rem;min-height:18px;}
+
+/* ══════════════════════════════
+   SITE PRINCIPAL
+══════════════════════════════ */
+#app{display:none;}
+
+/* CONSTELAÇÃO DE FUNDO */
+#starCanvas{
+  position:fixed;top:0;left:0;
+  width:100%;height:100%;
+  z-index:0;pointer-events:auto;
+}
+
+/* WRAPPER */
+.site-wrap{position:relative;z-index:1;}
+
+/* HEADER */
+header{
+  background:rgba(27,58,107,0.85);
+  backdrop-filter:blur(8px);
+  color:white;text-align:center;
+  padding:1.2rem;
+  border-bottom:1px solid rgba(168,200,232,.2);
+}
+.title{font-family:'Bangers',cursive;font-size:2.4rem;letter-spacing:3px;}
+.subtitle{font-size:.85rem;opacity:.8;margin-top:.2rem;}
+.user-badge{
+  position:absolute;top:12px;right:12px;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(168,200,232,.3);
+  border-radius:20px;padding:4px 12px;
+  color:white;font-size:.78rem;font-weight:700;
+  display:flex;align-items:center;gap:6px;
+}
+.logout-btn{
+  background:none;border:none;color:rgba(255,255,255,.6);
+  cursor:pointer;font-size:.75rem;text-decoration:underline;
+  padding:0;
+}
+
+/* COUNTER */
+.counter{
+  background:rgba(27,58,107,0.7);
+  backdrop-filter:blur(6px);
+  color:white;text-align:center;padding:.8rem;
+  border-bottom:1px solid rgba(168,200,232,.15);
+}
+.counter-grid{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;}
+.box{
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(168,200,232,.3);
+  color:white;padding:5px 8px;border-radius:10px;min-width:52px;
+}
+.num{font-family:'Bangers';font-size:1.4rem;line-height:1;}
+
+/* NAV */
+nav{
+  display:flex;flex-wrap:wrap;justify-content:center;
+  gap:6px;padding:8px;
+  background:rgba(5,13,26,0.6);
+  backdrop-filter:blur(6px);
+  border-bottom:1px solid rgba(168,200,232,.1);
+}
+nav button{
+  border:1.5px solid rgba(168,200,232,.4);
+  background:rgba(255,255,255,.07);
+  color:rgba(255,255,255,.85);
+  padding:5px 12px;border-radius:20px;
+  font-family:'Bangers';font-size:.95rem;cursor:pointer;transition:.15s;
+}
+nav button:hover{background:rgba(255,255,255,.15);}
+nav button.active{background:var(--red);color:white;border-color:#8B0000;}
+
+/* PANELS */
+.panel{display:none;padding:1rem;max-width:700px;margin:0 auto;}
+.panel.active{display:block;}
+
+h2{
+  font-family:'Bangers';color:white;
+  font-size:1.5rem;margin-bottom:.8rem;letter-spacing:1px;
+  text-shadow:0 2px 8px rgba(0,0,0,.5);
+}
+
+label{
+  font-weight:700;font-size:.85rem;
+  color:rgba(168,200,232,.9);display:block;margin-top:.6rem;
+}
+
+input[type="text"],textarea,select{
+  padding:8px 10px;
+  border:1.5px solid rgba(168,200,232,.4);
+  border-radius:8px;width:100%;margin-top:4px;
+  font-family:'Nunito',sans-serif;font-size:.9rem;
+  background:rgba(255,255,255,.08);
+  color:white;outline:none;
+}
+input[type="text"]::placeholder,textarea::placeholder{color:rgba(255,255,255,.35);}
+input[type="text"]:focus,textarea:focus{border-color:var(--blue3);}
+select option{background:#1B3A6B;color:white;}
+input[type="file"]{margin-top:4px;font-size:.85rem;color:rgba(255,255,255,.7);}
+
+button.primary{
+  background:var(--blue2);color:white;border:none;
+  padding:9px 18px;margin-top:10px;cursor:pointer;
+  border-radius:8px;font-family:'Bangers';
+  font-size:1rem;letter-spacing:1px;transition:.15s;
+}
+button.primary:hover{background:#1a5a8a;}
+
+/* ══════════════════════════════
+   MEMÓRIAS
+══════════════════════════════ */
+.mgrid{display:flex;flex-wrap:wrap;gap:20px;margin-top:1rem;}
+.card{position:relative;transform:rotate(var(--r));transition:.2s;width:120px;flex-shrink:0;}
+.card:hover{transform:rotate(0deg) scale(1.08);z-index:5;}
+.polaroid{
+  background:white;padding:6px 6px 28px;
+  box-shadow:0 4px 15px rgba(0,0,0,.4);
+  border-radius:3px;position:relative;
+}
+.tape{
+  width:36px;height:14px;
+  background:rgba(168,200,232,.65);
+  position:absolute;top:-7px;left:50%;
+  transform:translateX(-50%);border-radius:2px;
+}
+.pimg{width:100%;height:100px;object-fit:cover;display:block;border-radius:2px;}
+.caption{
+  font-family:'Caveat';text-align:center;
+  font-size:.82rem;margin-top:4px;color:#333;
+  line-height:1.2;word-break:break-word;
+}
+.mdel{
+  position:absolute;top:-7px;right:-7px;
+  background:var(--red);color:white;
+  border:2px solid white;border-radius:50%;
+  width:20px;height:20px;display:none;cursor:pointer;
+  font-size:.6rem;font-weight:700;
+  align-items:center;justify-content:center;
+}
+.card:hover .mdel{display:flex;}
+
+/* ══════════════════════════════
+   LEMBRETES
+══════════════════════════════ */
+.litem{
+  background:rgba(214,232,245,.15);
+  border:1.5px solid rgba(168,200,232,.35);
+  border-radius:8px;padding:9px 12px;
+  margin-top:8px;display:flex;align-items:center;gap:8px;color:white;
+}
+.ltag{
+  background:var(--blue2);color:white;
+  font-size:.7rem;padding:2px 7px;
+  border-radius:10px;font-family:'Bangers';
+  letter-spacing:1px;white-space:nowrap;
+}
+.ldel{margin-left:auto;background:none;border:none;color:#e74c3c;cursor:pointer;font-size:1rem;font-weight:700;}
+
+/* ══════════════════════════════
+   DIÁRIO — ESTILO CADERNO
+══════════════════════════════ */
+#dia textarea{
+  background:rgba(255,252,240,0.95) !important;
+  color:#2c2c2c !important;
+  font-family:'Caveat',cursive !important;
+  font-size:1.15rem !important;
+  line-height:2rem !important;
+  min-height:160px;
+  padding:8px 12px 8px 48px !important;
+  background-image:
+    linear-gradient(rgba(168,200,232,.4) 1px, transparent 1px),
+    linear-gradient(90deg, transparent 40px, rgba(220,100,100,.25) 40px, rgba(220,100,100,.25) 42px, transparent 42px) !important;
+  background-size:100% 2rem, 100% 100% !important;
+  border:none !important;
+  border-radius:4px !important;
+  box-shadow:2px 3px 12px rgba(0,0,0,.3) !important;
+  resize:vertical;
+}
+
+.diary-card{
+  border-radius:8px;padding:1rem;margin-top:10px;
+  position:relative;overflow:hidden;
+  font-family:'Caveat',cursive;font-size:1.05rem;line-height:1.7;
+}
+.diary-card.open{
+  background:rgba(255,252,240,0.92);
+  border-left:4px solid var(--blue2);
+  color:#2c2c2c;
+}
+.diary-card.locked{
+  background:rgba(180,30,30,0.18);
+  border:1.5px solid rgba(220,50,50,.5);
+  color:rgba(255,255,255,.5);
+  filter:blur(2px);
+  cursor:pointer;
+}
+.diary-card.locked:hover{filter:blur(1.5px);}
+.diary-card.unlocked-temp{
+  background:rgba(255,252,240,0.92);
+  border-left:4px solid #e74c3c;
+  color:#2c2c2c;
+}
+.dmeta{font-size:.76rem;font-weight:700;margin-bottom:4px;font-family:'Nunito',sans-serif;color:var(--blue2);}
+.lock-icon{font-size:1.3rem;position:absolute;top:8px;right:10px;}
+.diary-locked-msg{
+  position:absolute;inset:0;display:flex;
+  flex-direction:column;align-items:center;justify-content:center;
+  gap:4px;filter:none !important;
+  pointer-events:none;
+}
+.diary-locked-msg span{font-size:2rem;}
+.diary-locked-msg p{color:rgba(255,255,255,.8);font-size:.8rem;font-family:'Nunito',sans-serif;filter:none;}
+
+/* Animação cadeado */
+@keyframes lockClose{
+  0%{transform:scale(1);}
+  40%{transform:scale(1.4) rotate(-10deg);}
+  70%{transform:scale(1.2) rotate(5deg);}
+  100%{transform:scale(1) rotate(0deg);}
+}
+@keyframes lockOpen{
+  0%{transform:scale(1) rotate(0deg);}
+  50%{transform:scale(1.3) rotate(-20deg);}
+  100%{transform:scale(1) rotate(-15deg);}
+}
+.lock-anim-close{animation:lockClose .5s ease forwards;}
+.lock-anim-open{animation:lockOpen .4s ease forwards;}
+
+/* Modal PIN */
+.pin-modal{
+  position:fixed;inset:0;z-index:999;
+  background:rgba(0,0,0,.7);
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(4px);
+}
+.pin-box{
+  background:#0d1f3c;
+  border:1.5px solid rgba(168,200,232,.4);
+  border-radius:16px;padding:2rem;
+  text-align:center;width:280px;
+}
+.pin-box h3{font-family:'Bangers',cursive;color:white;font-size:1.4rem;letter-spacing:2px;margin-bottom:.5rem;}
+.pin-box p{color:rgba(168,200,232,.8);font-size:.82rem;margin-bottom:1rem;}
+.pin-dots{display:flex;justify-content:center;gap:10px;margin-bottom:1.2rem;}
+.pin-dot{
+  width:16px;height:16px;border-radius:50%;
+  border:2px solid rgba(168,200,232,.5);
+  background:transparent;transition:.2s;
+}
+.pin-dot.filled{background:var(--blue3);border-color:var(--blue3);}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.pin-key{
+  background:rgba(255,255,255,.08);
+  border:1.5px solid rgba(168,200,232,.25);
+  color:white;padding:12px;border-radius:10px;
+  font-family:'Bangers';font-size:1.2rem;cursor:pointer;transition:.15s;
+}
+.pin-key:hover{background:rgba(255,255,255,.18);}
+.pin-err{color:#e74c3c;font-size:.8rem;margin-top:.5rem;min-height:16px;}
+.pin-cancel{
+  background:none;border:none;color:rgba(255,255,255,.4);
+  cursor:pointer;font-size:.8rem;margin-top:.8rem;text-decoration:underline;
+}
+
+/* ══════════════════════════════
+   CALENDÁRIO
+══════════════════════════════ */
+.cal-wrap{
+  border-radius:12px;
+  padding:1rem;
+  transition:all .4s ease;
+}
+
+/* TEMAS */
+.tema-padrao .calh button{background:rgba(255,255,255,.1);border:1.5px solid rgba(168,200,232,.35);color:white;}
+.tema-padrao .calmn{color:white;}
+.tema-padrao .caldn{color:var(--blue3);}
+.tema-padrao .cald{color:rgba(255,255,255,.8);}
+.tema-padrao .cald:hover{background:rgba(168,200,232,.15);border-color:rgba(168,200,232,.3);}
+.tema-padrao .cald.today{background:var(--blue2);color:white;}
+.tema-padrao .cald.selected{background:rgba(168,200,232,.25);border-color:rgba(168,200,232,.8);box-shadow:0 0 0 2px rgba(168,200,232,.4);color:white;}
+.tema-padrao .cald.marked{background:var(--cream);border-color:var(--cream);color:var(--blue);font-weight:700;}
+.tema-padrao .cald.marked::after{content:'♥';position:absolute;bottom:1px;right:2px;font-size:.45rem;color:var(--blue);}
+.tema-padrao .calnote{background:rgba(255,255,255,.07);border:1.5px solid rgba(168,200,232,.3);}
+
+/* NATAL (Dezembro) */
+.tema-natal{background:linear-gradient(135deg,rgba(10,40,10,.85),rgba(30,10,10,.85));}
+.tema-natal .calh button{background:rgba(200,50,50,.3);border:1.5px solid rgba(255,100,100,.4);color:#ffcccc;}
+.tema-natal .calmn{color:#ff6b6b;text-shadow:0 0 10px rgba(255,50,50,.5);}
+.tema-natal .caldn{color:#a8e6a8;}
+.tema-natal .cald{color:rgba(255,220,220,.8);}
+.tema-natal .cald:hover{background:rgba(200,50,50,.2);border-color:rgba(255,100,100,.4);}
+.tema-natal .cald.today{background:#c0392b;color:white;box-shadow:0 0 8px rgba(192,57,43,.5);}
+.tema-natal .cald.selected{background:rgba(255,100,100,.2);border-color:#ff6b6b;box-shadow:0 0 0 2px rgba(255,107,107,.4);color:white;}
+.tema-natal .cald.marked{background:#f5f0e8;border-color:#f5f0e8;color:#8B0000;font-weight:700;}
+.tema-natal .cald.marked::after{content:'🎄';position:absolute;bottom:1px;right:1px;font-size:.5rem;}
+.tema-natal .calnote{background:rgba(200,50,50,.15);border:1.5px solid rgba(255,100,100,.3);}
+.tema-natal .calnote label{color:#ffaaaa;}
+.tema-natal h2::after{content:' 🎄';}
+
+/* CARNAVAL (Fevereiro) */
+.tema-carnaval{background:linear-gradient(135deg,rgba(60,0,80,.85),rgba(80,40,0,.85));}
+.tema-carnaval .calh button{background:rgba(180,0,180,.25);border:1.5px solid rgba(255,100,255,.4);color:#ffaaff;}
+.tema-carnaval .calmn{color:#ff6bff;text-shadow:0 0 10px rgba(255,0,255,.4);}
+.tema-carnaval .caldn{color:#ffdd44;}
+.tema-carnaval .cald{color:rgba(255,220,255,.8);}
+.tema-carnaval .cald:hover{background:rgba(180,0,180,.2);border-color:rgba(255,100,255,.4);}
+.tema-carnaval .cald.today{background:#8B008B;color:white;box-shadow:0 0 8px rgba(139,0,139,.5);}
+.tema-carnaval .cald.selected{background:rgba(255,100,255,.2);border-color:#ff6bff;box-shadow:0 0 0 2px rgba(255,107,255,.4);color:white;}
+.tema-carnaval .cald.marked{background:#ffdd44;border-color:#ffdd44;color:#4a0080;font-weight:700;}
+.tema-carnaval .cald.marked::after{content:'🎭';position:absolute;bottom:1px;right:1px;font-size:.5rem;}
+.tema-carnaval .calnote{background:rgba(180,0,180,.15);border:1.5px solid rgba(255,100,255,.3);}
+.tema-carnaval .calnote label{color:#ffaaff;}
+.tema-carnaval h2::after{content:' 🎭';}
+
+/* DIA DOS NAMORADOS (Junho) */
+.tema-namorados{background:linear-gradient(135deg,rgba(80,0,30,.85),rgba(50,0,50,.85));}
+.tema-namorados .calh button{background:rgba(200,0,80,.25);border:1.5px solid rgba(255,100,150,.4);color:#ffaac8;}
+.tema-namorados .calmn{color:#ff6b9d;text-shadow:0 0 10px rgba(255,0,100,.4);}
+.tema-namorados .caldn{color:#ffb3c8;}
+.tema-namorados .cald{color:rgba(255,200,220,.8);}
+.tema-namorados .cald:hover{background:rgba(200,0,80,.2);border-color:rgba(255,100,150,.4);}
+.tema-namorados .cald.today{background:#c0002b;color:white;box-shadow:0 0 8px rgba(192,0,43,.5);}
+.tema-namorados .cald.selected{background:rgba(255,100,150,.2);border-color:#ff6b9d;box-shadow:0 0 0 2px rgba(255,107,157,.4);color:white;}
+.tema-namorados .cald.marked{background:#ffe0eb;border-color:#ffe0eb;color:#8B0030;font-weight:700;}
+.tema-namorados .cald.marked::after{content:'💕';position:absolute;bottom:1px;right:1px;font-size:.5rem;}
+.tema-namorados .calnote{background:rgba(200,0,80,.15);border:1.5px solid rgba(255,100,150,.3);}
+.tema-namorados .calnote label{color:#ffaac8;}
+.tema-namorados h2::after{content:' 💕';}
+
+/* HALLOWEEN (Outubro) */
+.tema-halloween{background:linear-gradient(135deg,rgba(30,10,0,.85),rgba(60,20,0,.85));}
+.tema-halloween .calh button{background:rgba(180,80,0,.3);border:1.5px solid rgba(255,140,0,.4);color:#ffcc88;}
+.tema-halloween .calmn{color:#ff8c00;text-shadow:0 0 10px rgba(255,100,0,.5);}
+.tema-halloween .caldn{color:#cc6600;}
+.tema-halloween .cald{color:rgba(255,200,150,.8);}
+.tema-halloween .cald:hover{background:rgba(180,80,0,.2);border-color:rgba(255,140,0,.4);}
+.tema-halloween .cald.today{background:#cc4400;color:white;box-shadow:0 0 8px rgba(200,60,0,.5);}
+.tema-halloween .cald.selected{background:rgba(255,140,0,.2);border-color:#ff8c00;box-shadow:0 0 0 2px rgba(255,140,0,.4);color:white;}
+.tema-halloween .cald.marked{background:#ff8c00;border-color:#ff8c00;color:#1a0500;font-weight:700;}
+.tema-halloween .cald.marked::after{content:'🎃';position:absolute;bottom:1px;right:1px;font-size:.5rem;}
+.tema-halloween .calnote{background:rgba(180,80,0,.15);border:1.5px solid rgba(255,140,0,.3);}
+.tema-halloween .calnote label{color:#ffcc88;}
+.tema-halloween h2::after{content:' 🎃';}
+
+/* ANO NOVO (Janeiro) */
+.tema-anonovo{background:linear-gradient(135deg,rgba(0,10,40,.85),rgba(20,0,60,.85));}
+.tema-anonovo .calh button{background:rgba(200,180,0,.25);border:1.5px solid rgba(255,230,0,.4);color:#ffee88;}
+.tema-anonovo .calmn{color:#ffd700;text-shadow:0 0 10px rgba(255,200,0,.5);}
+.tema-anonovo .caldn{color:#ccaa00;}
+.tema-anonovo .cald{color:rgba(255,240,180,.8);}
+.tema-anonovo .cald:hover{background:rgba(200,180,0,.15);border-color:rgba(255,230,0,.3);}
+.tema-anonovo .cald.today{background:#b8860b;color:white;box-shadow:0 0 8px rgba(184,134,11,.5);}
+.tema-anonovo .cald.selected{background:rgba(255,215,0,.2);border-color:#ffd700;box-shadow:0 0 0 2px rgba(255,215,0,.4);color:white;}
+.tema-anonovo .cald.marked{background:#ffd700;border-color:#ffd700;color:#1a1000;font-weight:700;}
+.tema-anonovo .cald.marked::after{content:'✨';position:absolute;bottom:1px;right:1px;font-size:.5rem;}
+.tema-anonovo .calnote{background:rgba(200,180,0,.1);border:1.5px solid rgba(255,230,0,.3);}
+.tema-anonovo .calnote label{color:#ffee88;}
+.tema-anonovo h2::after{content:' ✨';}
+
+/* PÁSCOA (Abril) */
+.tema-pascoa{background:linear-gradient(135deg,rgba(20,40,10,.85),rgba(40,20,50,.85));}
+.tema-pascoa .calh button{background:rgba(100,180,80,.2);border:1.5px solid rgba(150,220,100,.4);color:#ccffaa;}
+.tema-pascoa .calmn{color:#88cc44;text-shadow:0 0 10px rgba(100,200,50,.4);}
+.tema-pascoa .caldn{color:#aaddaa;}
+.tema-pascoa .cald{color:rgba(200,240,180,.8);}
+.tema-pascoa .cald:hover{background:rgba(100,180,80,.15);border-color:rgba(150,220,100,.3);}
+.tema-pascoa .cald.today{background:#5a8a20;color:white;box-shadow:0 0 8px rgba(80,130,30,.5);}
+.tema-pascoa .cald.selected{background:rgba(150,220,100,.2);border-color:#88cc44;box-shadow:0 0 0 2px rgba(136,204,68,.4);color:white;}
+.tema-pascoa .cald.marked{background:#e8f5d0;border-color:#88cc44;color:#2d5a00;font-weight:700;}
+.tema-pascoa .cald.marked::after{content:'🐣';position:absolute;bottom:1px;right:1px;font-size:.5rem;}
+.tema-pascoa .calnote{background:rgba(100,180,80,.1);border:1.5px solid rgba(150,220,100,.3);}
+.tema-pascoa .calnote label{color:#ccffaa;}
+.tema-pascoa h2::after{content:' 🐣';}
+
+.cald{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:.78rem;font-weight:600;cursor:pointer;border:1.5px solid transparent;position:relative;transition:all .15s;}
+.cald.empty{cursor:default;pointer-events:none;}
+.calh{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;}
+.calh button{border-radius:8px;padding:4px 12px;cursor:pointer;font-family:'Bangers';font-size:1.1rem;width:auto;transition:.15s;}
+.calmn{font-family:'Bangers';font-size:1.2rem;letter-spacing:1.5px;}
+.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.caldn{text-align:center;font-size:.7rem;font-weight:700;padding:3px 0;}
+.calnote{margin-top:.8rem;border-radius:10px;padding:.8rem;display:none;}
+.calnote.on{display:block;}
+.calnote label{display:block;margin-bottom:4px;}
+
+/* TEMA PERSONALIZADO */
+.tema-custom .cald.marked::after{content:'⭐';position:absolute;bottom:1px;right:1px;font-size:.5rem;}
+.calnote label{color:rgba(168,200,232,.9);}
+
+/* ══════════════════════════════
+   JOGOS
+══════════════════════════════ */
+.jogo-card{
+  background:rgba(255,255,255,.07);
+  border:1.5px solid rgba(168,200,232,.25);
+  border-radius:14px;padding:1.5rem 1rem;
+  text-align:center;cursor:pointer;transition:.18s;
+}
+.jogo-card:hover{
+  background:rgba(255,255,255,.13);
+  border-color:rgba(168,200,232,.5);
+  transform:translateY(-3px);
+  box-shadow:0 8px 24px rgba(0,0,0,.3);
+}
+.jogo-card-title{
+  font-family:'Bangers';color:white;
+  font-size:1.1rem;letter-spacing:1px;margin-top:.5rem;
+}
+.jogo-card-desc{color:rgba(168,200,232,.7);font-size:.78rem;margin-top:.3rem;}
+.btn-voltar{
+  background:none;border:1.5px solid rgba(168,200,232,.3);
+  color:rgba(168,200,232,.8);border-radius:20px;
+  padding:5px 14px;cursor:pointer;font-weight:700;
+  font-size:.85rem;margin-bottom:1rem;display:inline-block;transition:.15s;
+}
+.btn-voltar:hover{background:rgba(168,200,232,.1);}
+
+/* Quebra-cabeça */
+.quebra-foto-card{
+  background:rgba(255,255,255,.07);
+  border:1.5px solid rgba(168,200,232,.2);
+  border-radius:12px;padding:.7rem;
+  cursor:pointer;transition:.18s;width:140px;flex-shrink:0;text-align:center;
+}
+.quebra-foto-card:hover{
+  background:rgba(255,255,255,.13);
+  border-color:rgba(168,200,232,.5);
+  transform:translateY(-2px);
+}
+.quebra-foto-card img{width:100%;height:100px;object-fit:cover;border-radius:8px;display:block;}
+.quebra-foto-card p{
+  font-family:'Caveat';color:white;
+  font-size:.88rem;margin-top:.4rem;line-height:1.3;
+}
+.peca{
+  cursor:pointer;transition:opacity .1s;
+  border:1px solid rgba(255,255,255,.1);
+}
+.peca:hover{opacity:.85;}
+.peca.no-lugar{
+  border:2px solid #2ecc71 !important;
+  box-shadow:0 0 6px rgba(46,204,113,.5);
+}
+
+/* Ferramentas de desenho */
+.tool-btn{
+  background:rgba(255,255,255,.08);
+  border:1.5px solid rgba(168,200,232,.25);
+  color:white;padding:6px 10px;border-radius:8px;
+  cursor:pointer;font-size:1rem;transition:.15s;
+}
+.tool-btn:hover{background:rgba(255,255,255,.18);}
+.tool-btn.active{background:var(--blue2);border-color:var(--blue2);}
+
+/* Galeria de desenhos */
+.galeria-card{
+  background:rgba(255,255,255,.07);
+  border:1.5px solid rgba(168,200,232,.2);
+  border-radius:10px;overflow:hidden;
+  cursor:pointer;transition:.18s;
+}
+.galeria-card:hover{transform:scale(1.03);border-color:rgba(168,200,232,.5);}
+.galeria-card img{width:100%;aspect-ratio:1;object-fit:cover;display:block;}
+.galeria-card-info{padding:.4rem .5rem;}
+.galeria-card-user{font-size:.72rem;color:rgba(168,200,232,.7);}
+.galeria-card-tipo{
+  font-family:'Bangers';font-size:.7rem;letter-spacing:1px;
+  padding:1px 6px;border-radius:8px;display:inline-block;margin-bottom:2px;
+}
+.tipo-livre{background:#1a5a8a;color:#a8c8e8;}
+.tipo-desafio{background:#8B0000;color:#ffaaaa;}
+
+/* Placar */
+.placar-item{
+  background:rgba(255,255,255,.07);
+  border:1.5px solid rgba(168,200,232,.2);
+  border-radius:10px;padding:.6rem .9rem;
+  display:flex;align-items:center;gap:8px;color:white;
+}
+.placar-estrelas{color:var(--gold);letter-spacing:2px;}
+
+/* ══════════════════════════════
+   CUIDADOS
+══════════════════════════════ */
+.calc-card{
+  background:rgba(255,255,255,.05);
+  border:1.5px solid rgba(168,200,232,.2);
+  border-radius:14px;padding:1.2rem;
+  margin-bottom:1rem;
+}
+.calc-titulo{
+  font-family:'Bangers';color:var(--blue3);
+  font-size:1.1rem;letter-spacing:1px;margin-bottom:.8rem;
+}
+.calc-result{
+  margin-top:.8rem;padding:.8rem 1rem;
+  border-radius:10px;font-weight:700;
+  font-size:.95rem;display:none;
+}
+.calc-result.ok{background:rgba(46,204,113,.15);border:1.5px solid rgba(46,204,113,.4);color:#2ecc71;}
+.calc-result.alerta{background:rgba(241,196,15,.15);border:1.5px solid rgba(241,196,15,.4);color:#f1c40f;}
+.calc-result.perigo{background:rgba(231,76,60,.15);border:1.5px solid rgba(231,76,60,.4);color:#e74c3c;}
+.calc-result.info{background:rgba(46,109,164,.2);border:1.5px solid rgba(168,200,232,.3);color:var(--blue3);}
+
+.registro-card{
+  background:rgba(255,255,255,.05);
+  border:1.5px solid rgba(168,200,232,.15);
+  border-radius:12px;padding:1rem;
+  margin-bottom:.8rem;position:relative;
+}
+.registro-card.perigo-card{
+  border-color:rgba(231,76,60,.4);
+  background:rgba(231,76,60,.08);
+}
+.registro-card.alerta-card{
+  border-color:rgba(241,196,15,.4);
+  background:rgba(241,196,15,.06);
+}
+.reg-data{
+  font-size:.72rem;color:rgba(168,200,232,.5);
+  margin-bottom:.5rem;font-style:italic;
+}
+.reg-valores{
+  display:flex;flex-wrap:wrap;gap:8px;
+  margin-bottom:.4rem;
+}
+.reg-val{
+  background:rgba(255,255,255,.07);
+  border-radius:8px;padding:4px 10px;
+  font-size:.82rem;color:white;
+  display:flex;align-items:center;gap:4px;
+}
+.reg-val.val-perigo{background:rgba(231,76,60,.25);color:#ff8a80;}
+.reg-val.val-alerta{background:rgba(241,196,15,.2);color:#ffeb3b;}
+.reg-val.val-ok{background:rgba(46,204,113,.15);color:#a5d6a7;}
+.reg-obs{
+  font-size:.82rem;color:rgba(255,255,255,.55);
+  font-style:italic;margin-top:.3rem;
+}
+.reg-del{
+  position:absolute;top:8px;right:8px;
+  background:none;border:none;color:rgba(231,76,60,.5);
+  cursor:pointer;font-size:.9rem;
+}
+.reg-del:hover{color:#e74c3c;}
+
+.alerta-box{
+  border-radius:10px;padding:.7rem 1rem;
+  margin-bottom:.6rem;font-size:.85rem;font-weight:700;
+  display:flex;align-items:center;gap:8px;
+}
+.alerta-box.perigo{background:rgba(231,76,60,.2);border:1.5px solid rgba(231,76,60,.5);color:#ff8a80;}
+.alerta-box.aviso{background:rgba(241,196,15,.15);border:1.5px solid rgba(241,196,15,.4);color:#ffeb3b;}
+.alerta-box.ok{background:rgba(46,204,113,.12);border:1.5px solid rgba(46,204,113,.35);color:#a5d6a7;}
+
+/* tabela sinais vitais */
+#tabelaSinais tbody tr:nth-child(odd){background:rgba(255,255,255,.03);}
+#tabelaSinais tbody tr:hover{background:rgba(168,200,232,.08);}
+#tabelaSinais td{padding:7px 8px;color:rgba(255,255,255,.8);border-bottom:1px solid rgba(168,200,232,.08);text-align:center;}
+#tabelaSinais td:first-child{text-align:left;color:var(--blue3);font-weight:700;}
+
+/* ══════════════════════════════
+   NOTÍCIAS
+══════════════════════════════ */
+.news-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1rem;}
+.news-tab{background:rgba(255,255,255,.07);border:1.5px solid rgba(168,200,232,.3);color:rgba(255,255,255,.8);padding:5px 12px;border-radius:20px;font-family:'Bangers';font-size:.9rem;cursor:pointer;transition:.15s;}
+.news-tab:hover{background:rgba(255,255,255,.15);}
+.news-tab.active{background:var(--blue2);color:white;border-color:var(--blue2);}
+.news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;}
+.news-card{background:rgba(255,255,255,.07);border:1.5px solid rgba(168,200,232,.2);border-radius:12px;padding:.9rem;cursor:pointer;transition:.18s;display:flex;flex-direction:column;gap:6px;position:relative;}
+.news-card:hover{background:rgba(255,255,255,.13);border-color:rgba(168,200,232,.5);transform:translateY(-3px) scale(1.02);box-shadow:0 8px 24px rgba(0,0,0,.3);}
+.news-card:active{transform:scale(.97);}
+.nc-emoji{font-size:1.8rem;line-height:1;}
+.nc-tag{display:inline-block;font-family:'Bangers';font-size:.72rem;letter-spacing:1px;padding:2px 8px;border-radius:10px;align-self:flex-start;}
+.nc-title{color:white;font-weight:700;font-size:.88rem;line-height:1.4;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.nc-date{color:rgba(168,200,232,.5);font-size:.7rem;margin-top:auto;}
+.nc-tap{color:rgba(168,200,232,.4);font-size:.68rem;text-align:right;margin-top:2px;}
+.tag-jogos{background:#1a6b3c;color:#a8e6c0;}
+.tag-enfermagem{background:#6b1a4a;color:#f0a8d0;}
+.tag-arte{background:#6b4a1a;color:#f0d0a8;}
+.tag-tech{background:#1a3a6b;color:#a8c8e8;}
+.tag-filmes{background:#4a1a6b;color:#d0a8f0;}
+.tag-series{background:#6b1a1a;color:#f0a8a8;}
+@keyframes postItPop{from{opacity:0;transform:scale(.85) rotate(-2deg);}to{opacity:1;transform:scale(1) rotate(0deg);}}
+
+/* ADM */
+.adm-section{
+  background:rgba(255,255,255,.05);
+  border:1.5px solid rgba(168,200,232,.2);
+  border-radius:12px;padding:1rem;margin-top:1rem;
+}
+.adm-section h3{font-family:'Bangers';color:var(--blue3);font-size:1.2rem;letter-spacing:1px;margin-bottom:.8rem;}
+.user-row{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.06);
+  border-radius:8px;padding:8px 12px;margin-bottom:6px;color:white;font-size:.88rem;
+}
+.user-row .role{font-size:.7rem;padding:2px 8px;border-radius:10px;font-family:'Bangers';}
+.role.adm{background:#c0392b;color:white;}
+.role.user{background:#2e6da4;color:white;}
+.del-user{margin-left:auto;background:none;border:none;color:#e74c3c;cursor:pointer;font-size:.9rem;}
+</style>
+</head>
+<body>
+
+<!-- ══ TELA DE LOGIN ══ -->
+<div id="loginScreen">
+  <canvas id="loginStars"></canvas>
+  <div class="login-box">
+    <h1>☁ Nosso Cantinho ☁</h1>
+    <p>Ici, nous sommes chez nous..・。.・゜✭</p>
+    <input type="text" id="loginUser" placeholder="Nome" autocomplete="off"/>
+    <input type="password" id="loginPass" placeholder="Senha"/>
+    <button class="login-btn" onclick="doLogin()">Entrar</button>
+    <div class="login-err" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- ══ APP PRINCIPAL ══ -->
+<div id="app">
+<!-- BEM-VINDA: céu interativo -->
+<div id="telaBoasVindas" style="
+  position:fixed;inset:0;z-index:100;
+  display:none;flex-direction:column;
+  align-items:center;justify-content:flex-end;
+  padding-bottom:2.5rem;
+">
+  <div style="
+    background:rgba(5,13,26,.75);
+    border:1.5px solid rgba(168,200,232,.25);
+    border-radius:20px;
+    padding:1.4rem 2rem;
+    text-align:center;
+    backdrop-filter:blur(8px);
+    max-width:320px;
+    width:90%;
+  ">
+    <div style="font-family:'Bangers',cursive;font-size:1.6rem;color:white;letter-spacing:2px;margin-bottom:.3rem;">
+    Nosso primeiro date ♡
+    </div>
+    <div style="font-size:.82rem;color:rgba(168,200,232,.7);margin-bottom:.2rem;">
+      Meus olhos brilhavam ao olhar para você. E em 18/02/2026 o céu estava assim:
+    </div>
+    <div style="font-size:.75rem;color:rgba(168,200,232,.45);margin-bottom:1rem;">
+      Arraste para explorar · Passe o mouse nas estrelas
+    </div>
+    <button onclick="entrarNoSite()" style="
+      background:rgba(46,109,164,.8);
+      border:1.5px solid rgba(168,200,232,.4);
+      color:white;padding:10px 28px;
+      border-radius:20px;cursor:pointer;
+      font-family:'Bangers',cursive;
+      font-size:1.1rem;letter-spacing:2px;
+      transition:.15s;
+    ">Entrar</button>
+  </div>
+</div>
+  <canvas id="starCanvas"></canvas>
+  <div class="site-wrap">
+
+    <header style="position:relative;">
+      <div class="title">☁ Nosso Cantinho ☁</div>
+      <div class="subtitle">desde 17 de janeiro de 2026 ∞</div>
+      <div class="user-badge">
+        <span id="userLabel">👤</span>
+        <button class="logout-btn" onclick="doLogout()">sair</button>
+      </div>
+    </header>
+
+    <div class="counter">
+      <div style="font-family:'Bangers';font-size:.85rem;letter-spacing:2px;opacity:.7;margin-bottom:.4rem;">Desfrutando dos melhores sentimentos desde</div>
+      <div class="counter-grid">
+        <div class="box"><div class="num" id="cy">0</div><div style="font-size:.6rem;font-weight:700;color:rgba(168,200,232,.8);">ANOS</div></div>
+        <div class="box"><div class="num" id="cmo">0</div><div style="font-size:.6rem;font-weight:700;color:rgba(168,200,232,.8);">MESES</div></div>
+        <div class="box"><div class="num" id="cd">0</div><div style="font-size:.6rem;font-weight:700;color:rgba(168,200,232,.8);">DIAS</div></div>
+        <div class="box"><div class="num" id="ch">00</div><div style="font-size:.6rem;font-weight:700;color:rgba(168,200,232,.8);">HORAS</div></div>
+        <div class="box"><div class="num" id="cm">00</div><div style="font-size:.6rem;font-weight:700;color:rgba(168,200,232,.8);">MIN</div></div>
+        <div class="box"><div class="num" id="cs">00</div><div style="font-size:.6rem;font-weight:700;color:rgba(168,200,232,.8);">SEG</div></div>
+      </div>
+    </div>
+
+    <nav id="nav">
+      <button class="active" onclick="tab(this,'mem')">Memórias</button>
+      <button onclick="tab(this,'lem')">Lembretes</button>
+      <button onclick="tab(this,'dia')">Diário</button>
+      <button onclick="tab(this,'cal')"> Calendário</button>
+      <button onclick="tab(this,'news')">Notícias</button>
+      <button onclick="tab(this,'jogos')">Jogos</button>
+      <button onclick="tab(this,'cuidados')">Cuidados</button>
+      <button id="admBtn" onclick="tab(this,'adm')" style="display:none;">⚙️ ADM</button>
+    </nav>
+
+    <!-- MEMÓRIAS -->
+    <div class="panel active" id="mem">
+      <h2>📸 Memórias</h2>
+      <label>📷 Escolher foto</label>
+      <input type="file" id="mfile" accept="image/*"/>
+      <label>Legenda (obrigatória)</label>
+      <input type="text" id="mcap" placeholder="Escreva uma legenda..."/>
+      <button class="primary" onclick="addMem()">Guardar Memória</button>
+      <div class="mgrid" id="mgrid"></div>
+    </div>
+
+    <!-- LEMBRETES -->
+    <div class="panel" id="lem">
+      <h2>📌 Lembretes</h2>
+      <label>Lembrete</label>
+      <input type="text" id="linp" placeholder="Escreva um lembrete..."/>
+      <label>Categoria</label>
+      <select id="ltag">
+        <option value="amor">amor</option>
+        <option value="importante">importante</option>
+        <option value="surpresa">surpresa</option>
+        <option value="lembrar">lembrar</option>
+      </select>
+      <button class="primary" onclick="addL()">+ Adicionar</button>
+      <div id="llist"></div>
+    </div>
+
+    <!-- DIÁRIO -->
+    <div class="panel" id="dia">
+      <h2>📖 Diário</h2>
+      <div id="dlist" style="max-height:280px;overflow-y:auto;margin-bottom:1rem;"></div>
+      <label>Seu nome</label>
+      <input type="text" id="daut" placeholder="Seu nome" style="max-width:180px;"/>
+      <label>O que está no seu coração hoje?</label>
+      <textarea id="dtxt" rows="5" placeholder="Escreva aqui..."></textarea>
+      <div style="display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap;">
+        <label style="margin:0;display:flex;align-items:center;gap:6px;color:rgba(168,200,232,.9);cursor:pointer;">
+          <input type="checkbox" id="dlock" style="width:auto;margin:0;accent-color:var(--red);"/> 🔒 Proteger com senha
+        </label>
+        <button class="primary" style="margin:0;" onclick="addD()">Registrar</button>
+      </div>
+    </div>
+
+    <!-- CALENDÁRIO -->
+    <div class="panel" id="cal">
+  <h2>🗓️ Calendário</h2>
+  <div class="cal-wrap tema-padrao" id="calWrap">
+    <div class="calh">
+      <button onclick="chMo(-1)">◀</button>
+      <div class="calmn" id="calmn"></div>
+      <button onclick="chMo(1)">▶</button>
+    </div>
+    <div class="calgrid" id="calgrid"></div>
+    <div class="calnote" id="calnote">
+      <label id="calnlbl"></label>
+      <input type="text" id="calni" placeholder="Nota para este dia..."/>
+      <button class="primary" onclick="saveNote()">Salvar nota</button>
+    </div>
+  </div>
+</div>
+
+<!-- JOGOS -->
+<div class="panel" id="jogos">
+  <h2>🎮 Jogos</h2>
+
+  <!-- MENU PRINCIPAL -->
+  <div id="jogosMenu">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:.5rem;">
+      <div class="jogo-card" onclick="abrirQuebra()">
+        <div style="font-size:2.5rem;">🧩</div>
+        <div class="jogo-card-title">Quebra-Cabeça</div>
+        <div class="jogo-card-desc">Monte nossas fotos peça por peça</div>
+      </div>
+      <div class="jogo-card" onclick="abrirDesenho()">
+        <div style="font-size:2.5rem;">🎨</div>
+        <div class="jogo-card-title">Estúdio de Desenho</div>
+        <div class="jogo-card-desc">Desenho livre + desafio semanal</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUEBRA-CABEÇA -->
+  <div id="jogoQuebra" style="display:none;">
+    <button class="btn-voltar" onclick="voltarMenu()">← Voltar</button>
+    <div id="quebraSelecao">
+      <h3 style="color:var(--blue3);font-family:'Bangers';letter-spacing:1px;margin-bottom:1rem;">
+        🧩 Escolha uma foto:
+      </h3>
+      <div id="quebraFotos" style="display:flex;flex-wrap:wrap;gap:14px;"></div>
+    </div>
+    <div id="quebraJogo" style="display:none;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem;flex-wrap:wrap;gap:8px;">
+        <div>
+          <span style="color:var(--blue3);font-family:'Bangers';font-size:1rem;letter-spacing:1px;">
+            PEÇAS: <span id="quebraPecas" style="color:white;">0</span> restantes
+          </span>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="primary" onclick="embaralharQuebra()">🔀 Embaralhar</button>
+          <button class="primary" onclick="voltarSelecao()">← Fotos</button>
+        </div>
+      </div>
+      <div id="quebraPreview" style="margin-bottom:.8rem;text-align:center;"></div>
+      <div id="quebraBoard" style="
+        display:grid;
+        gap:2px;
+        background:rgba(255,255,255,.05);
+        border:2px solid rgba(168,200,232,.2);
+        border-radius:10px;
+        padding:8px;
+        touch-action:none;
+        user-select:none;
+      "></div>
+      <div id="quebraVitoria" style="display:none;text-align:center;padding:2rem;">
+        <div style="font-size:3rem;">🎉</div>
+        <div style="font-family:'Bangers';color:var(--gold);font-size:1.8rem;letter-spacing:2px;">
+          PARABÉNS!
+        </div>
+        <div style="color:rgba(255,255,255,.7);margin-top:.5rem;">Você montou o quebra-cabeça!</div>
+        <button class="primary" style="margin-top:1rem;" onclick="voltarSelecao()">Jogar novamente</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ESTÚDIO DE DESENHO -->
+  <div id="jogoDesenho" style="display:none;">
+    <button class="btn-voltar" onclick="voltarMenu()">← Voltar</button>
+
+    <!-- TABS: livre / desafio / galeria -->
+    <div style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap;">
+      <button class="news-tab active" id="dtab-livre" onclick="switchDesenhoTab('livre')">✏️ Livre</button>
+      <button class="news-tab" id="dtab-desafio" onclick="switchDesenhoTab('desafio')">⚡ Desafio Semanal</button>
+      <button class="news-tab" id="dtab-galeria" onclick="switchDesenhoTab('galeria')">🖼️ Galeria</button>
+    </div>
+
+    <!-- LIVRE -->
+    <div id="desenho-livre">
+      <div id="desenhoToolbar">
+        <!-- Ferramentas -->
+        <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:8px;">
+          <button class="tool-btn active" id="tool-pen" onclick="setTool('pen')" title="Caneta">✏️</button>
+          <button class="tool-btn" id="tool-brush" onclick="setTool('brush')" title="Pincel">🖌️</button>
+          <button class="tool-btn" id="tool-eraser" onclick="setTool('eraser')" title="Borracha">⬜</button>
+          <button class="tool-btn" id="tool-fill" onclick="setTool('fill')" title="Preencher">🪣</button>
+          <button class="tool-btn" id="tool-line" onclick="setTool('line')" title="Linha">╱</button>
+          <button class="tool-btn" id="tool-rect" onclick="setTool('rect')" title="Retângulo">▭</button>
+          <button class="tool-btn" id="tool-circle" onclick="setTool('circle')" title="Círculo">○</button>
+          <div style="width:1px;height:28px;background:rgba(255,255,255,.2);"></div>
+          <input type="color" id="corPrincipal" value="#1B3A6B" title="Cor principal"
+            style="width:32px;height:32px;border:none;border-radius:6px;cursor:pointer;padding:2px;background:none;">
+          <input type="color" id="corFundo" value="#ffffff" title="Cor de fundo do canvas"
+            style="width:32px;height:32px;border:none;border-radius:6px;cursor:pointer;padding:2px;background:none;">
+          <div style="display:flex;align-items:center;gap:4px;">
+            <span style="color:rgba(255,255,255,.6);font-size:.75rem;">Tamanho:</span>
+            <input type="range" id="tamanhoTool" min="1" max="50" value="5"
+              style="width:80px;" oninput="document.getElementById('tamanhoVal').textContent=this.value">
+            <span id="tamanhoVal" style="color:white;font-size:.75rem;min-width:20px;">5</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:4px;">
+            <span style="color:rgba(255,255,255,.6);font-size:.75rem;">Opacidade:</span>
+            <input type="range" id="opacidadeTool" min="1" max="100" value="100"
+              style="width:70px;" oninput="document.getElementById('opacidadeVal').textContent=this.value+'%'">
+            <span id="opacidadeVal" style="color:white;font-size:.75rem;min-width:35px;">100%</span>
+          </div>
+        </div>
+        <!-- Paleta rápida -->
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;">
+            
+            <div onclick="document.getElementById('corPrincipal').value='${c}'"
+              style="width:22px;height:22px;background:${c};border-radius:4px;cursor:pointer;border:1.5px solid rgba(255,255,255,.3);"></div>
+         
+        </div>
+        <!-- Ações -->
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
+          <button class="primary" onclick="desfazer()">↩ Desfazer</button>
+          <button class="primary" onclick="refazer()">↪ Refazer</button>
+          <button class="primary" onclick="limparCanvas()">🗑️ Limpar</button>
+          <button class="primary" onclick="baixarDesenho()">⬇️ Baixar</button>
+          <button class="primary" onclick="salvarNaGaleria(false)">💾 Salvar na Galeria</button>
+        </div>
+      </div>
+      <canvas id="desenhoCanvas"
+        style="border-radius:8px;cursor:crosshair;touch-action:none;display:block;width:100%;max-width:600px;">
+      </canvas>
+    </div>
+
+    <!-- DESAFIO SEMANAL -->
+    <div id="desenho-desafio" style="display:none;">
+      <div id="desafioCard" style="
+        background:linear-gradient(135deg,rgba(27,58,107,.6),rgba(46,109,164,.4));
+        border:1.5px solid rgba(168,200,232,.3);
+        border-radius:14px;padding:1.2rem;margin-bottom:1rem;text-align:center;
+      ">
+        <div style="font-size:2rem;margin-bottom:.3rem;" id="desafioEmoji">⭐</div>
+        <div style="font-family:'Bangers';color:var(--blue3);font-size:.85rem;letter-spacing:2px;margin-bottom:.3rem;">
+          DESAFIO DA SEMANA
+        </div>
+        <div style="font-family:'Bangers';color:white;font-size:1.5rem;letter-spacing:1px;line-height:1.3;" id="desafioTexto">
+          Carregando...
+        </div>
+        <div style="color:rgba(168,200,232,.6);font-size:.75rem;margin-top:.5rem;" id="desafioData"></div>
+      </div>
+      <!-- mesmo canvas, ferramentas simplificadas -->
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;align-items:center;">
+        <button class="tool-btn active" id="dtool-pen" onclick="setTool('pen')">✏️</button>
+        <button class="tool-btn" id="dtool-brush" onclick="setTool('brush')">🖌️</button>
+        <button class="tool-btn" id="dtool-eraser" onclick="setTool('eraser')">⬜</button>
+        <input type="color" id="corPrincipal2" value="#1B3A6B"
+          style="width:32px;height:32px;border:none;border-radius:6px;cursor:pointer;padding:2px;background:none;">
+        <input type="range" id="tamanhoTool2" min="1" max="50" value="5" style="width:80px;">
+        <button class="primary" onclick="limparCanvas()">🗑️</button>
+        <button class="primary" onclick="desfazer()">↩</button>
+        <button class="primary" onclick="salvarNaGaleria(true)" style="background:#c0392b;">
+          ⚡ Enviar Desafio
+        </button>
+      </div>
+      <canvas id="desenhoCanvas2"
+        style="border-radius:8px;cursor:crosshair;touch-action:none;display:block;width:100%;max-width:600px;">
+      </canvas>
+    </div>
+
+    <!-- GALERIA -->
+    <div id="desenho-galeria" style="display:none;">
+      <h3 style="font-family:'Bangers';color:var(--blue3);font-size:1.2rem;letter-spacing:1px;margin-bottom:1rem;">
+        🖼️ Galeria de Desenhos
+      </h3>
+      <!-- Placar -->
+      <div id="placarDesenho" style="
+        display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1rem;
+      "></div>
+      <div id="galeriaGrid" style="
+        display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;
+      "></div>
+    </div>
+
+  </div><!-- jogoDesenho -->
+
+</div><!-- panel jogos -->
+
+<!-- MODAL AMPLIAR DESENHO -->
+<div id="modalDesenho" style="display:none;position:fixed;inset:0;z-index:997;background:rgba(0,0,0,.85);
+  align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+  <div style="position:relative;max-width:90vw;max-height:90vh;">
+    <button onclick="document.getElementById('modalDesenho').style.display='none'"
+      style="position:absolute;top:-36px;right:0;background:none;border:none;color:white;font-size:1.5rem;cursor:pointer;">✕</button>
+    <img id="modalDesenhoImg" style="max-width:90vw;max-height:85vh;border-radius:8px;display:block;"/>
+    <div id="modalDesenhoInfo" style="color:rgba(255,255,255,.7);text-align:center;font-size:.82rem;margin-top:.5rem;"></div>
+  </div>
+</div>
+
+<!-- CUIDADOS -->
+<div class="panel" id="cuidados">
+  <h2>🩺 Cuidados</h2>
+
+  <!-- TABS internas -->
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.2rem;">
+    <button class="news-tab active" id="ctab-registro" onclick="switchCuidadosTab('registro')">💗 Registro da Vovó</button>
+    <button class="news-tab" id="ctab-calc" onclick="switchCuidadosTab('calc')">🧮 Calculadora Clínica</button>
+  </div>
+
+  <!-- ══ REGISTRO DA VOVÓ ══ -->
+  <div id="cuidados-registro">
+
+    <!-- Formulário de novo registro -->
+    <div style="background:rgba(255,255,255,.05);border:1.5px solid rgba(168,200,232,.2);border-radius:14px;padding:1.2rem;margin-bottom:1.2rem;">
+      <div style="font-family:'Bangers';color:var(--blue3);font-size:1.1rem;letter-spacing:1px;margin-bottom:.8rem;">
+        📋 Novo Registro
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <!-- Glicose -->
+        <div>
+          <label>🩸 Glicose (mg/dL)</label>
+          <input type="number" id="regGlicose" placeholder="Ex: 95" min="0" max="600"/>
+        </div>
+        <!-- Jejum -->
+        <div style="display:flex;flex-direction:column;justify-content:flex-end;">
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;margin-top:.6rem;">
+            <input type="checkbox" id="regJejum" style="width:auto;accent-color:var(--blue2);"/>
+            Em jejum?
+          </label>
+        </div>
+        <!-- Pressão -->
+        <div>
+          <label>💓 Pressão Sistólica (mmHg)</label>
+          <input type="number" id="regSist" placeholder="Ex: 120" min="0" max="300"/>
+        </div>
+        <div>
+          <label>💓 Pressão Diastólica (mmHg)</label>
+          <input type="number" id="regDiast" placeholder="Ex: 80" min="0" max="200"/>
+        </div>
+        <!-- Frequência cardíaca -->
+        <div>
+          <label>❤️ Freq. Cardíaca (bpm)</label>
+          <input type="number" id="regFC" placeholder="Ex: 72" min="0" max="300"/>
+        </div>
+        <!-- Saturação -->
+        <div>
+          <label>🫁 Saturação O₂ (%)</label>
+          <input type="number" id="regSat" placeholder="Ex: 98" min="0" max="100"/>
+        </div>
+      </div>
+
+      <label style="margin-top:.8rem;">📝 Observações</label>
+      <textarea id="regObs" rows="2" placeholder="Como a sua avó estava hoje? Tomou os medicamentos? Algo diferente?"></textarea>
+
+      <div style="display:flex;gap:8px;margin-top:.8rem;flex-wrap:wrap;align-items:center;">
+        <div>
+          <label>📅 Data/hora</label>
+          <input type="datetime-local" id="regData" style="color:white;background:rgba(255,255,255,.08);border:1.5px solid rgba(168,200,232,.4);border-radius:8px;padding:6px 10px;font-family:'Nunito',sans-serif;font-size:.88rem;"/>
+        </div>
+        <button class="primary" style="margin-top:1.4rem;" onclick="addRegistro()">+ Salvar Registro</button>
+      </div>
+    </div>
+
+    <!-- Alertas de referência rápida -->
+    <div id="alertasSinais" style="margin-bottom:1rem;"></div>
+
+    <!-- Gráfico simples -->
+    <div style="background:rgba(255,255,255,.05);border:1.5px solid rgba(168,200,232,.2);border-radius:14px;padding:1rem;margin-bottom:1rem;">
+      <div style="font-family:'Bangers';color:var(--blue3);font-size:1rem;letter-spacing:1px;margin-bottom:.6rem;">
+        📈 Últimas medições
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:.6rem;">
+        <button class="news-tab active" id="gtab-glicose" onclick="switchGrafico('glicose')">🩸 Glicose</button>
+        <button class="news-tab" id="gtab-pressao" onclick="switchGrafico('pressao')">💓 Pressão</button>
+        <button class="news-tab" id="gtab-fc" onclick="switchGrafico('fc')">❤️ FC</button>
+      </div>
+      <canvas id="graficoCanvas" style="width:100%;max-width:600px;height:120px;display:block;"></canvas>
+      <div id="graficoLegenda" style="font-size:.72rem;color:rgba(168,200,232,.5);margin-top:.4rem;text-align:center;"></div>
+    </div>
+
+    <!-- Histórico -->
+    <div style="font-family:'Bangers';color:var(--blue3);font-size:1rem;letter-spacing:1px;margin-bottom:.6rem;">
+      🗂️ Histórico
+    </div>
+    <div id="registroLista"></div>
+  </div>
+
+  <!-- ══ CALCULADORA CLÍNICA ══ -->
+  <div id="cuidados-calc" style="display:none;">
+
+    <!-- IMC -->
+    <div class="calc-card">
+      <div class="calc-titulo">⚖️ Cálculo de IMC</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div><label>Peso (kg)</label><input type="number" id="imcPeso" placeholder="Ex: 70" step="0.1"/></div>
+        <div><label>Altura (m)</label><input type="number" id="imcAltura" placeholder="Ex: 1.65" step="0.01"/></div>
+      </div>
+      <button class="primary" onclick="calcIMC()">Calcular</button>
+      <div class="calc-result" id="imcResult"></div>
+    </div>
+
+    <!-- Gotejamento -->
+    <div class="calc-card">
+      <div class="calc-titulo">💧 Gotejamento de Soro</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div><label>Volume (mL)</label><input type="number" id="goteVol" placeholder="Ex: 500"/></div>
+        <div><label>Tempo (horas)</label><input type="number" id="goteTempo" placeholder="Ex: 4" step="0.5"/></div>
+      </div>
+      <label>Equipo</label>
+      <select id="goteEquipo">
+        <option value="20">Macrogotas (20 gts/mL)</option>
+        <option value="60">Microgotas (60 gts/mL)</option>
+      </select>
+      <button class="primary" onclick="calcGotejamento()">Calcular</button>
+      <div class="calc-result" id="goteResult"></div>
+    </div>
+
+    <!-- Dose de medicamento -->
+    <div class="calc-card">
+      <div class="calc-titulo">💊 Dose de Medicamento</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div><label>Dose prescrita (mg)</label><input type="number" id="dosePrescrita" placeholder="Ex: 500" step="0.1"/></div>
+        <div><label>Dose disponível (mg)</label><input type="number" id="doseDisponivel" placeholder="Ex: 250" step="0.1"/></div>
+        <div><label>Volume disponível (mL)</label><input type="number" id="doseVolume" placeholder="Ex: 5" step="0.1"/></div>
+      </div>
+      <button class="primary" onclick="calcDose()">Calcular</button>
+      <div class="calc-result" id="doseResult"></div>
+    </div>
+
+    <!-- Tabela de referência -->
+    <div class="calc-card">
+      <div class="calc-titulo">📊 Sinais Vitais Normais por Faixa Etária</div>
+      <div style="overflow-x:auto;">
+        <table id="tabelaSinais" style="width:100%;border-collapse:collapse;font-size:.82rem;margin-top:.5rem;">
+          <thead>
+            <tr style="background:rgba(46,109,164,.4);">
+              <th style="padding:8px;text-align:left;color:var(--blue3);border-bottom:1px solid rgba(168,200,232,.2);">Faixa etária</th>
+              <th style="padding:8px;text-align:center;color:var(--blue3);border-bottom:1px solid rgba(168,200,232,.2);">FC (bpm)</th>
+              <th style="padding:8px;text-align:center;color:var(--blue3);border-bottom:1px solid rgba(168,200,232,.2);">FR (irpm)</th>
+              <th style="padding:8px;text-align:center;color:var(--blue3);border-bottom:1px solid rgba(168,200,232,.2);">PA (mmHg)</th>
+              <th style="padding:8px;text-align:center;color:var(--blue3);border-bottom:1px solid rgba(168,200,232,.2);">Tax (°C)</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaBody"></tbody>
+        </table>
+      </div>
+      <div style="font-size:.7rem;color:rgba(168,200,232,.4);margin-top:.6rem;">
+        FC: Frequência Cardíaca • FR: Frequência Respiratória • PA: Pressão Arterial • Tax: Temperatura Axilar
+      </div>
+    </div>
+
+  </div><!-- cuidados-calc -->
+
+</div><!-- panel cuidados -->
+
+    <!-- NOTÍCIAS -->
+<div class="panel" id="news">
+  <h2>📰 Notícias & Curiosidades</h2>
+  <div class="news-tabs" id="newsTabs">
+    <button class="news-tab active" onclick="loadNews(this,'jogos')">🎮 Jogos</button>
+    <button class="news-tab" onclick="loadNews(this,'enfermagem')">🏥 Enfermagem</button>
+    <button class="news-tab" onclick="loadNews(this,'arte')">🎨 Arte</button>
+    <button class="news-tab" onclick="loadNews(this,'tech')">💻 Tech</button>
+    <button class="news-tab" onclick="loadNews(this,'filmes')">🎬 Filmes</button>
+    <button class="news-tab" onclick="loadNews(this,'series')">📺 Séries</button>
+  </div>
+  <div id="newsLoading" style="text-align:center;color:rgba(168,200,232,.6);padding:2rem;display:none;">✨ Buscando novidades...</div>
+  <div class="news-grid" id="newsGrid"></div>
+</div>
+
+<!-- POST-IT MODAL -->
+<div id="postItModal" style="display:none;position:fixed;inset:0;z-index:998;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
+  <div id="postIt" style="position:relative;width:min(420px,92vw);min-height:200px;max-height:80vh;overflow-y:auto;padding:2rem 1.8rem 1.5rem;border-radius:4px 4px 4px 20px;font-family:'Caveat',cursive;font-size:1.1rem;line-height:1.7;color:#2c2c2c;box-shadow:4px 6px 24px rgba(0,0,0,.5);animation:postItPop .25s cubic-bezier(.34,1.56,.64,1);">
+    <div id="postItFold" style="position:absolute;bottom:0;left:0;width:28px;height:28px;background:linear-gradient(135deg,transparent 50%,rgba(0,0,0,.15) 50%);"></div>
+    <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);width:60px;height:22px;background:rgba(255,255,200,.6);border-radius:2px;box-shadow:0 1px 4px rgba(0,0,0,.2);"></div>
+    <button onclick="closePostIt()" style="position:absolute;top:8px;right:10px;background:none;border:none;font-size:1.2rem;cursor:pointer;color:rgba(0,0,0,.4);">✕</button>
+    <div id="postItTag" style="font-family:'Bangers',cursive;font-size:.85rem;letter-spacing:1.5px;margin-bottom:.5rem;opacity:.7;"></div>
+    <div id="postItTitle" style="font-family:'Bangers',cursive;font-size:1.5rem;color:#1B3A6B;margin-bottom:.8rem;line-height:1.2;"></div>
+    <div id="postItBody" style="font-size:1rem;color:#333;line-height:1.7;"></div>
+    <div id="postItDate" style="margin-top:1rem;font-size:.75rem;color:rgba(0,0,0,.4);font-family:'Nunito',sans-serif;"></div>
+    <div id="postItLink" style="margin-top:.5rem;"></div>
+  </div>
+</div>
+
+    <!-- ADM -->
+    <div class="panel" id="adm">
+      <h2>⚙️ Painel ADM</h2>
+      <div class="adm-section">
+        <h3>👥 Usuários</h3>
+        <div id="userList"></div>
+        <div style="margin-top:1rem;border-top:1px solid rgba(168,200,232,.15);padding-top:1rem;">
+          <label>Nome do novo usuário</label>
+          <input type="text" id="newUname" placeholder="Nome..."/>
+          <label>Senha</label>
+          <input type="password" id="newUpass" placeholder="Senha..."/>
+          <label>
+            <input type="checkbox" id="newUadm" style="width:auto;accent-color:var(--red);"/> É administradora?
+          </label>
+          <button class="primary" onclick="addUser()">+ Adicionar usuário</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- site-wrap -->
+</div><!-- app -->
+
+<!-- PIN MODAL -->
+<div class="pin-modal" id="pinModal" style="display:none;">
+  <div class="pin-box">
+    <h3 id="pinTitle">🔒 CRIAR SENHA</h3>
+    <p id="pinSubtitle">Digite 4 dígitos para proteger sua nota</p>
+    <div class="pin-dots" id="pinDots">
+      <div class="pin-dot" id="pd0"></div>
+      <div class="pin-dot" id="pd1"></div>
+      <div class="pin-dot" id="pd2"></div>
+      <div class="pin-dot" id="pd3"></div>
+    </div>
+    <div class="pin-pad">
+      <button class="pin-key" onclick="pinKey('1')">1</button>
+      <button class="pin-key" onclick="pinKey('2')">2</button>
+      <button class="pin-key" onclick="pinKey('3')">3</button>
+      <button class="pin-key" onclick="pinKey('4')">4</button>
+      <button class="pin-key" onclick="pinKey('5')">5</button>
+      <button class="pin-key" onclick="pinKey('6')">6</button>
+      <button class="pin-key" onclick="pinKey('7')">7</button>
+      <button class="pin-key" onclick="pinKey('8')">8</button>
+      <button class="pin-key" onclick="pinKey('9')">9</button>
+      <button class="pin-key" onclick="pinKey('del')" style="font-size:.9rem;">⌫</button>
+      <button class="pin-key" onclick="pinKey('0')">0</button>
+      <button class="pin-key" onclick="pinKey('ok')" style="background:var(--blue2);">OK</button>
+    </div>
+    <div class="pin-err" id="pinErr"></div>
+    <button class="pin-cancel" onclick="closePin()">Cancelar</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// CÉU INTERATIVO — 18/02/2026 21:00 Piripiri-PI
+// ══════════════════════════════════════════════════════
+let ceuOffX=0, ceuOffY=0;
+let ceuDragStart=null;
+let ceuVelX=0, ceuVelY=0;
+let ceuAnimId=null;
+
+const CONSTELLATIONS=[
+  {
+    nome:'Cruzeiro do Sul',
+    desc:'Símbolo do Brasil 🇧🇷',
+    estrelas:[
+      {x:2800,y:1200,r:2.8},{x:2750,y:1320,r:2.0},
+      {x:2850,y:1320,r:2.0},{x:2800,y:1440,r:2.4},
+      {x:2720,y:1280,r:1.6},
+    ],
+    linhas:[[0,3],[1,2],[0,1],[0,2]],
+  },
+  {
+    nome:'Escorpião',
+    desc:'Visível no leste nessa noite',
+    estrelas:[
+      {x:2000,y:500,r:2.2},{x:2060,y:560,r:1.8},{x:2120,y:620,r:1.6},
+      {x:2160,y:700,r:1.4},{x:2140,y:780,r:1.5},{x:2100,y:860,r:1.8},
+      {x:2060,y:940,r:2.0},{x:2000,y:980,r:1.4},{x:1940,y:960,r:1.5},
+    ],
+    linhas:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8]],
+  },
+  {
+    nome:'Orion',
+    desc:'Visível ao oeste',
+    estrelas:[
+      {x:700,y:700,r:2.4},{x:820,y:760,r:2.0},{x:940,y:820,r:2.4},
+      {x:820,y:900,r:1.4},{x:820,y:1000,r:1.4},{x:820,y:1100,r:1.4},
+      {x:660,y:1160,r:2.6},{x:980,y:1160,r:2.0},
+    ],
+    linhas:[[0,1],[1,2],[3,4],[4,5],[0,6],[2,7],[6,5],[7,5]],
+  },
+  {
+    nome:'Centaurus',
+    desc:'Contém a estrela mais próxima do Sol',
+    estrelas:[
+      {x:2400,y:1400,r:2.6},{x:2500,y:1460,r:2.4},{x:2350,y:1520,r:1.6},
+      {x:2460,y:1580,r:1.4},{x:2560,y:1540,r:1.5},
+    ],
+    linhas:[[0,1],[0,2],[1,4],[2,3],[3,4]],
+  },
+  {
+    nome:'Vela',
+    desc:'Parte do antigo navio Argo',
+    estrelas:[
+      {x:1500,y:1300,r:2.0},{x:1600,y:1360,r:1.6},{x:1700,y:1300,r:1.8},
+      {x:1620,y:1220,r:1.4},
+    ],
+    linhas:[[0,1],[1,2],[2,3],[3,0]],
+  },
+  {
+    nome:'Cão Maior',
+    desc:'Contém Sírius, a estrela mais brilhante do céu',
+    estrelas:[
+      {x:1100,y:900,r:3.2},{x:1160,y:1000,r:1.6},{x:1200,y:1100,r:1.4},
+      {x:1100,y:1160,r:1.6},{x:1020,y:1080,r:1.4},
+    ],
+    linhas:[[0,1],[1,2],[2,3],[3,4],[4,0]],
+  },
+];
+
+// Estrelas de fundo distribuídas num mundo grande (4000x2000)
+function gerarEstrelasFundo(){
+  const stars=[];
+  for(let i=0;i<600;i++){
+    stars.push({
+      x:Math.random()*4000,
+      y:Math.random()*2000,
+      r:Math.random()*1.0+0.2,
+      tw:Math.random()*3+1,
+      tp:Math.random()*Math.PI*2,
+      bright:false,
+    });
+  }
+  CONSTELLATIONS.forEach(c=>{
+    c.estrelas.forEach(e=>{
+      stars.push({x:e.x,y:e.y,r:e.r,tw:Math.random()*2+1,tp:Math.random()*Math.PI*2,bright:true,const:c.nome});
+    });
+  });
+  return stars;
+}
+
+let starsWorld=null;
+
+function initStars(canvasId){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+
+  function resize(){
+    canvas.width=window.innerWidth;
+    canvas.height=window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize',resize);
+
+  // Canvas de login: só estrelas simples sem interação
+  if(canvasId==='loginStars'){
+  const W=()=>canvas.width, H=()=>canvas.height;
+
+  // ESTRELAS
+  const stars=[];
+  for(let i=0;i<280;i++){
+    stars.push({
+      x:Math.random(), y:Math.random(),
+      r:Math.random()*1.2+0.2,
+      tw:Math.random()*4+1,
+      tp:Math.random()*Math.PI*2,
+      alpha:Math.random()*0.5+0.3,
+    });
+  }
+  
+  function drawLoginScene(){
+    const cw=canvas.width, ch=canvas.height;
+    const t=Date.now()/1000;
+    // Estrelas de fundo
+    stars.forEach(s=>{
+      const tw=0.6+0.4*Math.sin(t/s.tw+s.tp);
+      // Evita o centro (caixa de login)
+      const cx=s.x*cw, cy=s.y*ch;
+      const distCentro=Math.sqrt((cx-cw/2)**2+(cy-ch/2)**2);
+      const alphaFade=distCentro<Math.min(cw,ch)*0.22?
+        Math.max(0,(distCentro-Math.min(cw,ch)*0.12)/(Math.min(cw,ch)*0.10)):1;
+      ctx.beginPath();
+      ctx.arc(cx,cy,s.r*tw,0,Math.PI*2);
+      ctx.shadowBlur=s.r>0.9?6:2;
+      ctx.shadowColor='rgba(168,200,232,0.6)';
+      ctx.fillStyle=`rgba(210,228,255,${s.alpha*tw*alphaFade})`;
+      ctx.fill();
+    });
+    ctx.shadowBlur=0;
+
+    // Brilho suave atrás da caixa de login (centro)
+    const glowCenter=ctx.createRadialGradient(cw/2,ch/2,0,cw/2,ch/2,Math.min(cw,ch)*0.28);
+    glowCenter.addColorStop(0,'rgba(27,58,107,0.18)');
+    glowCenter.addColorStop(0.5,'rgba(20,40,90,0.08)');
+    glowCenter.addColorStop(1,'transparent');
+    ctx.fillStyle=glowCenter;
+    ctx.fillRect(0,0,cw,ch);
+
+    requestAnimationFrame(drawLoginScene);
+  }
+  drawLoginScene();
+  return;
+}
+
+  // Canvas principal: céu interativo
+  if(!starsWorld) starsWorld=gerarEstrelasFundo();
+
+  // Centraliza no Cruzeiro do Sul ao abrir
+  ceuOffX=-(2800-canvas.width/2);
+  ceuOffY=-(1300-canvas.height/2);
+
+  let hover=null; // constelação em hover
+
+  // ── INTERAÇÃO ──
+  // Mouse
+  canvas.addEventListener('mousedown',e=>{
+    ceuDragStart={x:e.clientX-ceuOffX,y:e.clientY-ceuOffY};
+    ceuVelX=0;ceuVelY=0;
+    canvas.style.cursor='grabbing';
+  });
+  canvas.addEventListener('mousemove',e=>{
+    if(ceuDragStart){
+      const nx=e.clientX-ceuDragStart.x;
+      const ny=e.clientY-ceuDragStart.y;
+      ceuVelX=nx-ceuOffX;
+      ceuVelY=ny-ceuOffY;
+      ceuOffX=nx;ceuOffY=ny;
+    }
+    // Hover constelação
+    const wx=e.clientX-ceuOffX;
+    const wy=e.clientY-ceuOffY;
+    hover=null;
+    CONSTELLATIONS.forEach(c=>{
+      c.estrelas.forEach(s=>{
+        const d=Math.sqrt((s.x-wx)**2+(s.y-wy)**2);
+        if(d<30) hover=c;
+      });
+    });
+    canvas.style.cursor=ceuDragStart?'grabbing':(hover?'pointer':'grab');
+  });
+  canvas.addEventListener('mouseup',()=>{ceuDragStart=null;canvas.style.cursor='grab';});
+  canvas.addEventListener('mouseleave',()=>{ceuDragStart=null;});
+
+  // Touch
+  let lastTouch=null;
+  canvas.addEventListener('touchstart',e=>{
+    e.preventDefault();
+    const t=e.touches[0];
+    ceuDragStart={x:t.clientX-ceuOffX,y:t.clientY-ceuOffY};
+    lastTouch={x:t.clientX,y:t.clientY};
+    ceuVelX=0;ceuVelY=0;
+  },{passive:false});
+  canvas.addEventListener('touchmove',e=>{
+    e.preventDefault();
+    const t=e.touches[0];
+    if(ceuDragStart){
+      const nx=t.clientX-ceuDragStart.x;
+      const ny=t.clientY-ceuDragStart.y;
+      ceuVelX=nx-ceuOffX;
+      ceuVelY=ny-ceuOffY;
+      ceuOffX=nx;ceuOffY=ny;
+    }
+    lastTouch={x:t.clientX,y:t.clientY};
+  },{passive:false});
+  canvas.addEventListener('touchend',e=>{
+    ceuDragStart=null;
+  });
+
+  // ── DESENHO ──
+  function draw(){
+    const W=canvas.width,H=canvas.height;
+    ctx.fillStyle='#020810';
+    ctx.fillRect(0,0,W,H);
+
+    // Gradiente sutil
+    const grad=ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,Math.max(W,H)/2);
+    grad.addColorStop(0,'rgba(10,20,60,0.4)');
+    grad.addColorStop(1,'transparent');
+    ctx.fillStyle=grad;
+    ctx.fillRect(0,0,W,H);
+
+    const t=Date.now()/1000;
+
+    // Linhas das constelações
+    CONSTELLATIONS.forEach(c=>{
+      const isHover=hover&&hover.nome===c.nome;
+      ctx.strokeStyle=isHover?'rgba(168,200,232,.6)':'rgba(168,200,232,.18)';
+      ctx.lineWidth=isHover?1.5:0.8;
+      ctx.setLineDash([4,6]);
+      c.linhas.forEach(([a,b])=>{
+        const sa=c.estrelas[a],sb=c.estrelas[b];
+        ctx.beginPath();
+        ctx.moveTo(sa.x+ceuOffX,sa.y+ceuOffY);
+        ctx.lineTo(sb.x+ceuOffX,sb.y+ceuOffY);
+        ctx.stroke();
+      });
+      ctx.setLineDash([]);
+    });
+
+    // Estrelas
+    starsWorld.forEach(s=>{
+      const sx=s.x+ceuOffX, sy=s.y+ceuOffY;
+      if(sx<-10||sx>W+10||sy<-10||sy>H+10)return;
+      const tw=0.7+0.3*Math.sin(t/s.tw+s.tp);
+      const alpha=s.bright?(0.7+0.3*tw):(0.25+0.35*tw);
+      ctx.beginPath();
+      ctx.arc(sx,sy,s.r*tw,0,Math.PI*2);
+      if(s.bright){
+        ctx.shadowBlur=s.r*8;
+        ctx.shadowColor='rgba(168,200,232,.9)';
+        ctx.fillStyle=`rgba(220,235,255,${alpha})`;
+      } else {
+        ctx.shadowBlur=2;
+        ctx.shadowColor='rgba(168,200,232,.3)';
+        ctx.fillStyle=`rgba(190,210,255,${alpha})`;
+      }
+      ctx.fill();
+    });
+    ctx.shadowBlur=0;
+
+    // Nome da constelação em hover
+    if(hover){
+      const cx_=hover.estrelas.reduce((s,e)=>s+e.x,0)/hover.estrelas.length+ceuOffX;
+      const cy_=hover.estrelas.reduce((s,e)=>s+e.y,0)/hover.estrelas.length+ceuOffY;
+      ctx.save();
+      ctx.fillStyle='rgba(5,13,26,0.75)';
+      ctx.beginPath();
+      ctx.roundRect(cx_-80,cy_-48,160,44,8);
+      ctx.fill();
+      ctx.fillStyle='rgba(168,200,232,.9)';
+      ctx.font='bold 13px Nunito';
+      ctx.textAlign='center';
+      ctx.fillText(hover.nome,cx_,cy_-28);
+      ctx.fillStyle='rgba(168,200,232,.55)';
+      ctx.font='11px Nunito';
+      ctx.fillText(hover.desc,cx_,cy_-12);
+      ctx.restore();
+    }
+
+    // Instruções (some após 5s)
+    if(Date.now()<(window._ceuStart||0)+6000){
+      ctx.save();
+      const op=Math.max(0,1-(Date.now()-(window._ceuStart||0))/6000);
+      ctx.globalAlpha=op;
+      ctx.fillStyle='rgba(5,13,26,.7)';
+      ctx.beginPath();
+      ctx.roundRect(W/2-160,H-70,320,44,10);
+      ctx.fill();
+      ctx.fillStyle='rgba(168,200,232,.9)';
+      ctx.font='13px Nunito';
+      ctx.textAlign='center';
+      ctx.fillText('✨ Arraste para explorar o céu de vocês',W/2,H-44);
+      ctx.fillText('18/02/2026 · 21:00 · Piripiri, PI',W/2,H-26);
+      ctx.restore();
+    }
+
+    // Inércia suave
+    if(!ceuDragStart){
+      ceuVelX*=0.92;ceuVelY*=0.92;
+      ceuOffX+=ceuVelX;ceuOffY+=ceuVelY;
+    }
+
+    ceuAnimId=requestAnimationFrame(draw);
+  }
+  window._ceuStart=Date.now();
+  draw();
+  canvas.style.cursor='grab';
+}
+
+// ══════════════════════════════════════════════════════
+// LOGIN
+// ══════════════════════════════════════════════════════
+function ld(k,d){try{const v=localStorage.getItem(k);return v!==null?JSON.parse(v):d;}catch(e){return d;}}
+function sv(k,v){localStorage.setItem(k,JSON.stringify(v));}
+
+// Inicializa usuários padrão se não existirem
+function initUsers(){
+  if(!localStorage.getItem('nc_users')){
+    sv('nc_users',[
+      {name:'Nayelle',pass:'19032006',adm:true},
+      {name:'Lia',pass:'25052001',adm:false}
+    ]);
+  }
+}
+initUsers();
+
+let currentUser=null;
+
+function doLogin(){
+  const name=document.getElementById('loginUser').value.trim();
+  const pass=document.getElementById('loginPass').value.trim();
+  const users=ld('nc_users',[]);
+  const u=users.find(x=>x.name.toLowerCase()===name.toLowerCase()&&x.pass===pass);
+  if(!u){document.getElementById('loginErr').textContent='Nome ou senha incorretos.';return;}
+  currentUser=u;
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('userLabel').textContent=(u.adm?'👑 ':'👤 ')+u.name;
+  if(u.adm){document.getElementById('admBtn').style.display='inline-block';}
+  // Mostra o céu PRIMEIRO
+  document.getElementById('telaBoasVindas').style.display='flex';
+  initStars('starCanvas');
+  // Carrega dados em segundo plano
+  renderMem();renderL();renderD();renderCal();renderUsers();
+}
+
+document.getElementById('loginUser').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('loginPass').focus();});
+document.getElementById('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+function doLogout(){
+  currentUser=null;
+  document.getElementById('app').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('loginUser').value='';
+  document.getElementById('loginPass').value='';
+  document.getElementById('loginErr').textContent='';
+}
+
+function entrarNoSite(){
+  document.getElementById('telaBoasVindas').style.display='none';
+  // Para a animação do céu interativo e inicia a versão de fundo
+  // (reutiliza o mesmo canvas mas sem interação)
+  ceuDragStart=null;
+}
+
+// ══════════════════════════════════════════════════════
+// CONTADOR
+// ══════════════════════════════════════════════════════
+const START=new Date('2026-01-17T00:00:00-03:00').getTime();
+function tick(){
+  const now=Date.now(),off=-3*60;
+  function br(ms){const d=new Date(ms+off*60000);return{y:d.getUTCFullYear(),mo:d.getUTCMonth(),d:d.getUTCDate(),h:d.getUTCHours(),mi:d.getUTCMinutes(),s:d.getUTCSeconds()};}
+  const i=br(START),n=br(now);
+  let a=n.y-i.y,m=n.mo-i.mo,d=n.d-i.d;
+  if(d<0){m--;d+=new Date(Date.UTC(n.y,n.mo,0)).getUTCDate();}
+  if(m<0){a--;m+=12;}
+  let h=n.h-i.h,mi=n.mi-i.mi,s=n.s-i.s;
+  if(s<0){s+=60;mi--;}if(mi<0){mi+=60;h--;}if(h<0){h+=24;d--;}
+  if(d<0){m--;if(m<0){m+=12;a--;}d+=new Date(Date.UTC(n.y,n.mo,0)).getUTCDate();}
+  const p=n=>String(Math.max(0,n)).padStart(2,'0');
+  document.getElementById('cy').textContent=Math.max(0,a);
+  document.getElementById('cmo').textContent=Math.max(0,m);
+  document.getElementById('cd').textContent=Math.max(0,d);
+  document.getElementById('ch').textContent=p(Math.max(0,h));
+  document.getElementById('cm').textContent=p(Math.max(0,mi));
+  document.getElementById('cs').textContent=p(Math.max(0,s));
+}
+tick();setInterval(tick,1000);
+
+// ══════════════════════════════════════════════════════
+// NAV
+// ══════════════════════════════════════════════════════
+function tab(btn,id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(navigator.vibrate)navigator.vibrate(20);
+}
+
+// ══════════════════════════════════════════════════════
+// MEMÓRIAS
+// ══════════════════════════════════════════════════════
+let mems=ld('nc3_m',[]);
+if(!mems.length){
+  mems.push({img:'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=400',cap:'Nossa primeira memória 💙',r:-2});
+  sv('nc3_m',mems);
+}
+function addMem(){
+  const file=document.getElementById('mfile').files[0];
+  const cap=document.getElementById('mcap').value.trim();
+  if(!file){alert('Escolhe uma foto! 📷');return;}
+  if(!cap){alert('Escreva uma legenda! ✍️');return;}
+  const r=new FileReader();
+  r.onload=e=>{
+    mems.unshift({img:e.target.result,cap,r:(Math.random()*6-3).toFixed(1)});
+    sv('nc3_m',mems);
+    document.getElementById('mfile').value='';
+    document.getElementById('mcap').value='';
+    renderMem();
+  };
+  r.readAsDataURL(file);
+}
+function delMem(i){if(!confirm('Remover?'))return;mems.splice(i,1);sv('nc3_m',mems);renderMem();}
+function renderMem(){
+  const g=document.getElementById('mgrid');g.innerHTML='';
+  if(!mems.length){g.innerHTML='<p style="color:rgba(255,255,255,.4);padding:1rem;text-align:center;width:100%;">Nenhuma memória ainda 📷</p>';return;}
+  mems.forEach((m,i)=>{
+    const c=document.createElement('div');
+    c.className='card';c.style.setProperty('--r',m.r+'deg');
+    c.innerHTML=`<div class="polaroid"><div class="tape"></div><button class="mdel" onclick="delMem(${i})">✕</button><img class="pimg" src="${m.img}" loading="lazy"/><div class="caption">${m.cap}</div></div>`;
+    g.appendChild(c);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// LEMBRETES
+// ══════════════════════════════════════════════════════
+let lemb=ld('nc3_l',[]);
+function addL(){
+  const v=document.getElementById('linp').value.trim();
+  if(!v)return;
+  lemb.unshift({txt:v,tag:document.getElementById('ltag').value});
+  sv('nc3_l',lemb);
+  document.getElementById('linp').value='';
+  renderL();
+}
+function delL(i){lemb.splice(i,1);sv('nc3_l',lemb);renderL();}
+function renderL(){
+  const c=document.getElementById('llist');c.innerHTML='';
+  if(!lemb.length){c.innerHTML='<p style="color:rgba(255,255,255,.4);margin-top:1rem;text-align:center;">Nenhum lembrete ainda (¬_¬”)</p>';return;}
+  lemb.forEach((l,i)=>{c.innerHTML+=`<div class="litem"><span class="ltag">${l.tag}</span><span>${l.txt}</span><button class="ldel" onclick="delL(${i})">✕</button></div>`;});
+}
+
+// ══════════════════════════════════════════════════════
+// DIÁRIO COM CADEADO
+// ══════════════════════════════════════════════════════
+let dia=ld('nc3_d',[]);
+let pinMode=null; // 'create' ou 'unlock'
+let pinBuffer='';
+let pinTargetIdx=-1;
+let pendingEntry=null;
+
+function addD(){
+  const txt=document.getElementById('dtxt').value.trim();
+  const aut=document.getElementById('daut').value.trim()||'Anônima';
+  if(!txt)return;
+  const lock=document.getElementById('dlock').checked;
+  const dt=new Date().toLocaleDateString('pt-BR')+' às '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  const entry={aut,dt,txt,locked:lock,pin:null};
+  if(lock){
+    pendingEntry=entry;
+    openPin('create');
+  } else {
+    dia.unshift(entry);
+    sv('nc3_d',dia);
+    document.getElementById('dtxt').value='';
+    document.getElementById('dlock').checked=false;
+    renderD();
+  }
+}
+
+function renderD(){
+  const c=document.getElementById('dlist');c.innerHTML='';
+  if(!dia.length){c.innerHTML='<p style="color:rgba(255,255,255,.4);text-align:center;">Nenhum registro ainda (˶˃⤙˂˶)</p>';return;}
+  dia.forEach((e,i)=>{
+    const div=document.createElement('div');
+    if(e.locked && !e._unlocked){
+      div.className='diary-card locked';
+      div.onclick=()=>{pinTargetIdx=i;openPin('unlock');};
+      div.innerHTML=`
+        <div class="dmeta">${e.aut} — ${e.dt}</div>
+        <div style="filter:blur(3px);color:rgba(255,255,255,.3);font-size:.85rem;">••••••••••••••••••••••••</div>
+        <div class="diary-locked-msg"><span id="lockicon_${i}">🔒</span><p>Toque para desbloquear</p></div>`;
+    } else {
+      div.className=e.locked?'diary-card unlocked-temp':'diary-card open';
+      div.innerHTML=`
+        <div class="dmeta">${e.aut} — ${e.dt} ${e.locked?'<span style="color:#e74c3c;">🔓</span>':''}</div>
+        <div>${e.txt}</div>
+        ${currentUser&&currentUser.adm?`<button onclick="delD(${i})" style="margin-top:6px;background:none;border:none;color:#e74c3c;cursor:pointer;font-size:.8rem;">✕ remover</button>`:''}`;
+    }
+    c.appendChild(div);
+  });
+}
+
+function delD(i){
+  if(!currentUser||!currentUser.adm)return;
+  if(!confirm('Remover entrada?'))return;
+  dia.splice(i,1);sv('nc3_d',dia);renderD();
+}
+
+// PIN MODAL
+function openPin(mode){
+  pinMode=mode;pinBuffer='';
+  updatePinDots();
+  document.getElementById('pinErr').textContent='';
+  document.getElementById('pinModal').style.display='flex';
+  if(mode==='create'){
+    document.getElementById('pinTitle').textContent='🔒 CRIAR SENHA';
+    document.getElementById('pinSubtitle').textContent='Digite 4 dígitos para proteger sua nota';
+  } else {
+    document.getElementById('pinTitle').textContent='🔓 DESBLOQUEAR';
+    document.getElementById('pinSubtitle').textContent='Digite os 4 dígitos para ler a nota';
+  }
+}
+function closePin(){document.getElementById('pinModal').style.display='none';pinBuffer='';pendingEntry=null;pinTargetIdx=-1;}
+
+function pinKey(k){
+  if(k==='del'){pinBuffer=pinBuffer.slice(0,-1);updatePinDots();return;}
+  if(k==='ok'){confirmPin();return;}
+  if(pinBuffer.length>=4)return;
+  pinBuffer+=k;
+  updatePinDots();
+  if(pinBuffer.length===4&&pinMode==='unlock')confirmPin();
+}
+
+function updatePinDots(){
+  for(let i=0;i<4;i++){
+    const d=document.getElementById('pd'+i);
+    d.className='pin-dot'+(i<pinBuffer.length?' filled':'');
+  }
+}
+
+function confirmPin(){
+  if(pinBuffer.length<4){document.getElementById('pinErr').textContent='Digite 4 dígitos.';return;}
+  if(pinMode==='create'){
+    pendingEntry.pin=pinBuffer;
+    dia.unshift(pendingEntry);
+    sv('nc3_d',dia);
+    document.getElementById('dtxt').value='';
+    document.getElementById('dlock').checked=false;
+    closePin();
+    // Animação cadeado fechando
+    renderD();
+    setTimeout(()=>{
+      const icon=document.getElementById('lockicon_0');
+      if(icon){icon.classList.add('lock-anim-close');}
+    },100);
+  } else if(pinMode==='unlock'){
+    if(pinBuffer===dia[pinTargetIdx].pin){
+      dia[pinTargetIdx]._unlocked=true;
+      closePin();
+      renderD();
+    } else {
+      document.getElementById('pinErr').textContent='Senha incorreta! Tente novamente.';
+      pinBuffer='';updatePinDots();
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// CALENDÁRIO
+// ══════════════════════════════════════════════════════
+let notes=ld('nc3_n',{});
+let temaCustom=ld('nc3_temas',{});
+let cY=new Date().getFullYear();
+let cMo=new Date().getMonth();
+let selD=null;
+
+const MOS=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const DS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+
+// Temas automáticos por mês (0=Jan ... 11=Dez)
+const TEMAS_AUTO={
+  0:'tema-anonovo',
+  1:'tema-padrao',
+  2:'tema-padrao',
+  3:'tema-pascoa',
+  4:'tema-padrao',
+  5:'tema-namorados',
+  6:'tema-padrao',
+  7:'tema-padrao',
+  8:'tema-padrao',
+  9:'tema-halloween',
+  10:'tema-padrao',
+  11:'tema-natal',
+};
+
+const TEMAS_NOMES={
+  'tema-padrao':'🌙 Padrão',
+  'tema-natal':'🎄 Natal',
+  'tema-carnaval':'🎭 Carnaval',
+  'tema-namorados':'💕 Namorados',
+  'tema-halloween':'🎃 Halloween',
+  'tema-anonovo':'✨ Ano Novo',
+  'tema-pascoa':'🐣 Páscoa',
+};
+
+function getTema(mo){
+  // ADM pode ter definido um tema personalizado para esse mês
+  const chave='tema_'+mo;
+  return temaCustom[chave] || TEMAS_AUTO[mo] || 'tema-padrao';
+}
+
+function aplicarTema(mo){
+  const wrap=document.getElementById('calWrap');
+  if(!wrap) return;
+  // Remove todos os temas
+  Object.keys(TEMAS_NOMES).forEach(t=>wrap.classList.remove(t));
+  // Aplica o tema do mês
+  const tema=getTema(mo);
+  wrap.classList.add(tema);
+}
+
+function renderCal(){
+  document.getElementById('calmn').textContent=MOS[cMo]+' '+cY;
+  aplicarTema(cMo);
+
+  const g=document.getElementById('calgrid');
+  g.innerHTML='';
+  DS.forEach(d=>{g.innerHTML+=`<div class="caldn">${d}</div>`;});
+
+  const now=new Date();
+  const ts=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+  const first=new Date(cY,cMo,1).getDay();
+  const tot=new Date(cY,cMo+1,0).getDate();
+
+  for(let i=0;i<first;i++) g.innerHTML+=`<div class="cald empty"></div>`;
+
+  for(let d=1;d<=tot;d++){
+    const k=cY+'-'+String(cMo+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const el=document.createElement('div');
+    let cls='cald';
+    if(k===ts) cls+=' today';
+    if(notes[k]) cls+=' marked';
+    if(k===selD) cls+=' selected';
+    el.className=cls;
+    el.textContent=d;
+    el.onclick=()=>{
+      document.querySelectorAll('.cald.selected').forEach(c=>c.classList.remove('selected'));
+      el.classList.add('selected');
+      selD=k;
+      document.getElementById('calnote').classList.add('on');
+      document.getElementById('calnlbl').textContent='Nota para '+d+' de '+MOS[cMo]+':';
+      document.getElementById('calni').value=notes[k]||'';
+    };
+    g.appendChild(el);
+  }
+  document.getElementById('calnote').classList.remove('on');
+
+  // Painel ADM de temas (só aparece para admins)
+  renderTemaAdm();
+}
+
+function renderTemaAdm(){
+  let painel=document.getElementById('temaAdmPainel');
+  if(!currentUser||!currentUser.adm){
+    if(painel) painel.style.display='none';
+    return;
+  }
+  if(!painel){
+    painel=document.createElement('div');
+    painel.id='temaAdmPainel';
+    painel.style.cssText='margin-top:1rem;background:rgba(255,255,255,.05);border:1.5px solid rgba(168,200,232,.2);border-radius:10px;padding:.8rem;';
+    document.getElementById('cal').appendChild(painel);
+  }
+  painel.style.display='block';
+  const temaAtual=getTema(cMo);
+  painel.innerHTML=`
+    <p style="font-family:'Bangers';color:var(--blue3);font-size:1rem;letter-spacing:1px;margin-bottom:.5rem;">
+      🎨 Tema de ${MOS[cMo]}
+    </p>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;">
+      ${Object.entries(TEMAS_NOMES).map(([k,v])=>`
+        <button onclick="setTema('${k}')"
+          style="padding:5px 10px;border-radius:20px;cursor:pointer;font-family:'Bangers';font-size:.85rem;letter-spacing:1px;border:1.5px solid rgba(168,200,232,.3);transition:.15s;
+          background:${temaAtual===k?'var(--blue2)':'rgba(255,255,255,.07)'};
+          color:${temaAtual===k?'white':'rgba(255,255,255,.8)'};">
+          ${v}
+        </button>
+      `).join('')}
+    </div>
+    <p style="font-size:.72rem;color:rgba(168,200,232,.5);margin-top:.5rem;">
+      Apenas você (ADM) vê e altera essa opção.
+    </p>`;
+}
+
+function setTema(tema){
+  const chave='tema_'+cMo;
+  temaCustom[chave]=tema;
+  sv('nc3_temas',temaCustom);
+  renderCal();
+}
+
+function saveNote(){
+  if(!selD) return;
+  const v=document.getElementById('calni').value.trim();
+  if(v) notes[selD]=v;
+  else delete notes[selD];
+  sv('nc3_n',notes);
+  renderCal();
+}
+
+function chMo(d){
+  cMo+=d;
+  if(cMo>11){cMo=0;cY++;}
+  if(cMo<0){cMo=11;cY--;}
+  selD=null;
+  renderCal();
+}
+
+// ══════════════════════════════════════════════════════
+// JOGOS — MENU
+// ══════════════════════════════════════════════════════
+function voltarMenu(){
+  document.getElementById('jogosMenu').style.display='block';
+  document.getElementById('jogoQuebra').style.display='none';
+  document.getElementById('jogoDesenho').style.display='none';
+}
+
+// ══════════════════════════════════════════════════════
+// QUEBRA-CABEÇA
+// ══════════════════════════════════════════════════════
+let quebraAtual=null;
+let quebraOrdem=[];
+let quebraCols=4, quebraRows=4;
+let quebraSelecionado=null; // índice da peça selecionada
+
+function abrirQuebra(){
+  document.getElementById('jogosMenu').style.display='none';
+  document.getElementById('jogoQuebra').style.display='block';
+  renderQuebraFotos();
+}
+
+function renderQuebraFotos(){
+  document.getElementById('quebraSelecao').style.display='block';
+  document.getElementById('quebraJogo').style.display='none';
+  const c=document.getElementById('quebraFotos');
+  c.innerHTML='';
+  if(!mems.length){
+    c.innerHTML='<p style="color:rgba(255,255,255,.4);">Adicione fotos na seção Memórias primeiro! 📷</p>';
+    return;
+  }
+  mems.forEach((m,i)=>{
+    const card=document.createElement('div');
+    card.className='quebra-foto-card';
+    card.innerHTML=`<img src="${m.img}" loading="lazy"/><p>${m.cap}</p>`;
+    card.onclick=()=>iniciarQuebra(m);
+    c.appendChild(card);
+  });
+}
+
+function iniciarQuebra(mem){
+  quebraAtual=mem;
+  quebraSelecionado=null;
+  document.getElementById('quebraSelecao').style.display='none';
+  document.getElementById('quebraJogo').style.display='block';
+  document.getElementById('quebraVitoria').style.display='none';
+  document.getElementById('quebraBoard').style.display='grid';
+
+  document.getElementById('quebraPreview').innerHTML=`
+    <div style="display:inline-block;text-align:center;">
+      <img src="${mem.img}" style="height:70px;border-radius:6px;border:1.5px solid rgba(168,200,232,.3);"/>
+      <div style="font-family:'Caveat';color:rgba(255,255,255,.6);font-size:.8rem;margin-top:2px;">${mem.cap}</div>
+    </div>`;
+
+  quebraCols=4; quebraRows=4;
+  embaralharQuebra();
+}
+
+function embaralharQuebra(){
+  const total=quebraCols*quebraRows;
+  quebraOrdem=[...Array(total).keys()];
+  for(let i=quebraOrdem.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [quebraOrdem[i],quebraOrdem[j]]=[quebraOrdem[j],quebraOrdem[i]];
+  }
+  quebraSelecionado=null;
+  renderQuebraBoard();
+}
+
+function renderQuebraBoard(){
+  const board=document.getElementById('quebraBoard');
+  board.innerHTML='';
+
+  const img=new Image();
+  img.crossOrigin='anonymous';
+  img.onload=()=>{
+    // Tamanho do board: cabe na tela
+    const maxW=Math.min(480, window.innerWidth-48);
+    const cellSize=Math.floor(maxW/quebraCols);
+    const boardW=cellSize*quebraCols;
+
+    // Configura o grid sem gap
+    board.style.cssText=`
+      display:grid;
+      grid-template-columns:repeat(${quebraCols},${cellSize}px);
+      grid-template-rows:repeat(${quebraRows},${cellSize}px);
+      gap:0;
+      width:${boardW}px;
+      border:2px solid rgba(168,200,232,.3);
+      border-radius:8px;
+      overflow:hidden;
+      margin:0 auto;
+    `;
+
+    const pw=img.naturalWidth/quebraCols;
+    const ph=img.naturalHeight/quebraRows;
+
+    quebraOrdem.forEach((pIdx,pos)=>{
+      const col=pIdx%quebraCols;
+      const row=Math.floor(pIdx/quebraCols);
+
+      const canvas=document.createElement('canvas');
+      canvas.width=cellSize;
+      canvas.height=cellSize;
+      const ctx=canvas.getContext('2d');
+
+      // Desenha a fatia correta da imagem
+      ctx.drawImage(
+        img,
+        col*pw, row*ph, pw, ph,
+        0, 0, cellSize, cellSize
+      );
+
+      // Estilo da peça
+      canvas.style.cssText=`
+        width:${cellSize}px;
+        height:${cellSize}px;
+        display:block;
+        cursor:pointer;
+        box-sizing:border-box;
+        transition:filter .15s, outline .15s;
+        outline: ${quebraSelecionado===pos ? '3px solid #f4d03f' : 'none'};
+        filter: ${quebraSelecionado===pos ? 'brightness(1.3)' : 'none'};
+      `;
+
+      // No lugar certo: borda verde sutil
+      if(pIdx===pos){
+        canvas.style.outline='2px solid rgba(46,204,113,.5)';
+      }
+
+      canvas.onclick=()=>cliquePeca(pos);
+      board.appendChild(canvas);
+    });
+
+    // Atualiza peças restantes
+    const corretas=quebraOrdem.filter((v,i)=>v===i).length;
+    const total=quebraCols*quebraRows;
+    document.getElementById('quebraPecas').textContent=total-corretas;
+  };
+  img.src=quebraAtual.img;
+}
+
+function cliquePeca(pos){
+  if(quebraSelecionado===null){
+    // Primeira peça: seleciona
+    quebraSelecionado=pos;
+    renderQuebraBoard();
+  } else if(quebraSelecionado===pos){
+    // Clicou na mesma: deseleciona
+    quebraSelecionado=null;
+    renderQuebraBoard();
+  } else {
+    // Segunda peça: troca
+    [quebraOrdem[quebraSelecionado],quebraOrdem[pos]]=
+      [quebraOrdem[pos],quebraOrdem[quebraSelecionado]];
+    quebraSelecionado=null;
+    renderQuebraBoard();
+    checarVitoria();
+  }
+}
+
+function checarVitoria(){
+  const ok=quebraOrdem.every((v,i)=>v===i);
+  if(ok){
+    document.getElementById('quebraBoard').style.display='none';
+    document.getElementById('quebraVitoria').style.display='block';
+  }
+}
+
+function voltarSelecao(){
+  document.getElementById('quebraSelecao').style.display='block';
+  document.getElementById('quebraJogo').style.display='none';
+  quebraSelecionado=null;
+  renderQuebraFotos();
+}
+
+// ══════════════════════════════════════════════════════
+// ESTÚDIO DE DESENHO
+// ══════════════════════════════════════════════════════
+let desenhoCanvas=null, desenhoCtx=null;
+let desenhando=false;
+let toolAtual='pen';
+let undoStack=[], redoStack=[];
+let startX=0, startY=0;
+let snapShot=null;
+let galeriaDesenhos=ld('nc3_galeria',[]);
+let activeCanvasId='desenhoCanvas';
+
+const DESAFIOS_SEMANAIS=[
+  {emoji:'🌊',texto:'Desenhe um oceano com uma criatura misteriosa no fundo'},
+  {emoji:'🏠',texto:'Crie uma casa da árvore mágica'},
+  {emoji:'🐉',texto:'Desenhe um dragão que é amigo dos humanos'},
+  {emoji:'🌸',texto:'Crie um jardim japonês com cerejeiras'},
+  {emoji:'🚀',texto:'Desenhe uma cidade flutuante no espaço'},
+  {emoji:'🦋',texto:'Crie uma borboleta com asas de galáxia'},
+  {emoji:'🎪',texto:'Desenhe um circo encantado à meia-noite'},
+  {emoji:'🌙',texto:'Crie uma cena de lua cheia com lobisomem fofo'},
+  {emoji:'🍄',texto:'Desenhe uma floresta de cogumelos gigantes habitada por fadas'},
+  {emoji:'🐋',texto:'Crie uma baleia voando entre as nuvens'},
+  {emoji:'☕',texto:'Desenhe um café aconchegante num dia chuvoso'},
+  {emoji:'🦊',texto:'Crie uma raposa vestida de exploradora'},
+  {emoji:'🌈',texto:'Desenhe o que existe no fim do arco-íris'},
+  {emoji:'🎭',texto:'Crie dois personagens: um alegre e um melancólico'},
+  {emoji:'🏔️',texto:'Desenhe uma montanha com uma porta secreta'},
+  {emoji:'🐙',texto:'Crie um polvo tocando vários instrumentos musicais'},
+  {emoji:'🌺',texto:'Desenhe uma flor que só floresce à meia-noite'},
+  {emoji:'🦜',texto:'Crie um papagaio contador de histórias'},
+  {emoji:'🍕',texto:'Desenhe um universo dentro de uma fatia de pizza'},
+  {emoji:'🧜',texto:'Crie uma sereia descobrindo o mundo terrestre'},
+];
+
+function getDesafioSemana(){
+  // Mesma semana = mesmo desafio
+  const now=new Date();
+  const inicio=new Date(now.getFullYear(),0,1);
+  const semana=Math.floor((now-inicio)/(7*24*60*60*1000));
+  const idx=semana%DESAFIOS_SEMANAIS.length;
+  return DESAFIOS_SEMANAIS[idx];
+}
+
+function abrirDesenho(){
+  document.getElementById('jogosMenu').style.display='none';
+  document.getElementById('jogoDesenho').style.display='block';
+  switchDesenhoTab('livre');
+  setTimeout(()=>initCanvas('desenhoCanvas'),100);
+}
+
+function switchDesenhoTab(tab){
+  ['livre','desafio','galeria'].forEach(t=>{
+    document.getElementById('desenho-'+t).style.display=t===tab?'block':'none';
+    const btn=document.getElementById('dtab-'+t);
+    if(btn) btn.className='news-tab'+(t===tab?' active':'');
+  });
+  if(tab==='livre'){
+    activeCanvasId='desenhoCanvas';
+    setTimeout(()=>initCanvas('desenhoCanvas'),50);
+  }
+  if(tab==='desafio'){
+    activeCanvasId='desenhoCanvas2';
+    setTimeout(()=>initCanvas('desenhoCanvas2'),50);
+    const d=getDesafioSemana();
+    document.getElementById('desafioEmoji').textContent=d.emoji;
+    document.getElementById('desafioTexto').textContent=d.texto;
+    const now=new Date();
+    const dom=new Date(now);
+    dom.setDate(now.getDate()-now.getDay());
+    const prox=new Date(dom);prox.setDate(dom.getDate()+7);
+    document.getElementById('desafioData').textContent=
+      'Semana de '+dom.toLocaleDateString('pt-BR')+' até '+prox.toLocaleDateString('pt-BR');
+  }
+  if(tab==='galeria') renderGaleria();
+}
+
+function initCanvas(id){
+  const c=document.getElementById(id);
+  if(!c)return;
+  desenhoCanvas=c;
+  desenhoCtx=c.getContext('2d');
+  const W=Math.min(600,c.parentElement.clientWidth||500);
+  c.width=W; c.height=Math.round(W*0.65);
+  // Fundo branco
+  desenhoCtx.fillStyle='#ffffff';
+  desenhoCtx.fillRect(0,0,c.width,c.height);
+  undoStack=[]; redoStack=[];
+  saveUndo();
+  bindCanvas(c);
+}
+
+function bindCanvas(c){
+  c.onmousedown=e=>{startDraw(e.offsetX,e.offsetY);};
+  c.onmousemove=e=>{if(desenhando)draw(e.offsetX,e.offsetY);};
+  c.onmouseup=e=>{stopDraw(e.offsetX,e.offsetY);};
+  c.onmouseleave=e=>{if(desenhando)stopDraw(e.offsetX,e.offsetY);};
+  c.ontouchstart=e=>{
+    e.preventDefault();
+    const r=c.getBoundingClientRect();
+    const t=e.touches[0];
+    startDraw((t.clientX-r.left)*(c.width/r.width),(t.clientY-r.top)*(c.height/r.height));
+  },{passive:false};
+  c.ontouchmove=e=>{
+    e.preventDefault();
+    const r=c.getBoundingClientRect();
+    const t=e.touches[0];
+    if(desenhando)draw((t.clientX-r.left)*(c.width/r.width),(t.clientY-r.top)*(c.height/r.height));
+  },{passive:false};
+  c.ontouchend=e=>{
+    e.preventDefault();
+    const r=c.getBoundingClientRect();
+    const t=e.changedTouches[0];
+    stopDraw((t.clientX-r.left)*(c.width/r.width),(t.clientY-r.top)*(c.height/r.height));
+  },{passive:false};
+}
+
+function getCor(){
+  const id=activeCanvasId==='desenhoCanvas2'?'corPrincipal2':'corPrincipal';
+  return document.getElementById(id)?.value||'#000000';
+}
+function getTamanho(){
+  const id=activeCanvasId==='desenhoCanvas2'?'tamanhoTool2':'tamanhoTool';
+  return parseInt(document.getElementById(id)?.value||5);
+}
+function getOpacidade(){
+  return (parseInt(document.getElementById('opacidadeTool')?.value||100))/100;
+}
+
+function startDraw(x,y){
+  desenhando=true;
+  startX=x; startY=y;
+  desenhoCtx.beginPath();
+  const cor=getCor();
+  const tam=getTamanho();
+  const op=getOpacidade();
+  desenhoCtx.strokeStyle=toolAtual==='eraser'?'#ffffff':cor;
+  desenhoCtx.fillStyle=cor;
+  desenhoCtx.lineWidth=tam;
+  desenhoCtx.lineCap='round';
+  desenhoCtx.lineJoin='round';
+  desenhoCtx.globalAlpha=toolAtual==='eraser'?1:op;
+  if(toolAtual==='fill'){floodFill(Math.round(x),Math.round(y),cor);desenhando=false;saveUndo();return;}
+  if(['line','rect','circle'].includes(toolAtual)){
+    snapShot=desenhoCtx.getImageData(0,0,desenhoCanvas.width,desenhoCanvas.height);
+    return;
+  }
+  desenhoCtx.moveTo(x,y);
+}
+
+function draw(x,y){
+  if(!desenhando)return;
+  if(toolAtual==='line'){
+    desenhoCtx.putImageData(snapShot,0,0);
+    desenhoCtx.beginPath();
+    desenhoCtx.moveTo(startX,startY);
+    desenhoCtx.lineTo(x,y);
+    desenhoCtx.stroke();
+    return;
+  }
+  if(toolAtual==='rect'){
+    desenhoCtx.putImageData(snapShot,0,0);
+    desenhoCtx.beginPath();
+    desenhoCtx.strokeRect(startX,startY,x-startX,y-startY);
+    return;
+  }
+  if(toolAtual==='circle'){
+    desenhoCtx.putImageData(snapShot,0,0);
+    const rx=Math.abs(x-startX)/2, ry=Math.abs(y-startY)/2;
+    const cx=startX+(x-startX)/2, cy=startY+(y-startY)/2;
+    desenhoCtx.beginPath();
+    desenhoCtx.ellipse(cx,cy,rx,ry,0,0,Math.PI*2);
+    desenhoCtx.stroke();
+    return;
+  }
+  if(toolAtual==='brush'){
+    // Pincel mais suave
+    desenhoCtx.lineWidth=getTamanho()*2;
+    desenhoCtx.globalAlpha=getOpacidade()*0.3;
+  }
+  desenhoCtx.lineTo(x,y);
+  desenhoCtx.stroke();
+  desenhoCtx.beginPath();
+  desenhoCtx.moveTo(x,y);
+}
+
+function stopDraw(x,y){
+  if(!desenhando)return;
+  desenhando=false;
+  desenhoCtx.globalAlpha=1;
+  snapShot=null;
+  saveUndo();
+}
+
+function floodFill(x,y,cor){
+  // Fill simples por cor
+  const w=desenhoCanvas.width,h=desenhoCanvas.height;
+  const img=desenhoCtx.getImageData(0,0,w,h);
+  const data=img.data;
+  const idx=(y*w+x)*4;
+  const or=data[idx],og=data[idx+1],ob=data[idx+2],oa=data[idx+3];
+  const nr=parseInt(cor.slice(1,3),16),ng=parseInt(cor.slice(3,5),16),nb=parseInt(cor.slice(5,7),16);
+  if(or===nr&&og===ng&&ob===nb)return;
+  const stack=[[x,y]];
+  while(stack.length){
+    const [cx,cy]=stack.pop();
+    if(cx<0||cx>=w||cy<0||cy>=h)continue;
+    const i=(cy*w+cx)*4;
+    if(data[i]!==or||data[i+1]!==og||data[i+2]!==ob||data[i+3]!==oa)continue;
+    data[i]=nr;data[i+1]=ng;data[i+2]=nb;data[i+3]=255;
+    stack.push([cx+1,cy],[cx-1,cy],[cx,cy+1],[cx,cy-1]);
+  }
+  desenhoCtx.putImageData(img,0,0);
+}
+
+function saveUndo(){
+  if(!desenhoCanvas)return;
+  undoStack.push(desenhoCtx.getImageData(0,0,desenhoCanvas.width,desenhoCanvas.height));
+  if(undoStack.length>30)undoStack.shift();
+  redoStack=[];
+}
+function desfazer(){
+  if(undoStack.length<=1)return;
+  redoStack.push(undoStack.pop());
+  desenhoCtx.putImageData(undoStack[undoStack.length-1],0,0);
+}
+function refazer(){
+  if(!redoStack.length)return;
+  const s=redoStack.pop();
+  undoStack.push(s);
+  desenhoCtx.putImageData(s,0,0);
+}
+function limparCanvas(){
+  if(!confirm('Limpar o canvas?'))return;
+  const bg=activeCanvasId==='desenhoCanvas2'?'#ffffff':
+    (document.getElementById('corFundo')?.value||'#ffffff');
+  desenhoCtx.fillStyle=bg;
+  desenhoCtx.fillRect(0,0,desenhoCanvas.width,desenhoCanvas.height);
+  saveUndo();
+}
+function baixarDesenho(){
+  const link=document.createElement('a');
+  link.download='meu_desenho.png';
+  link.href=desenhoCanvas.toDataURL();
+  link.click();
+}
+function setTool(t){
+  toolAtual=t;
+  document.querySelectorAll('.tool-btn').forEach(b=>b.classList.remove('active'));
+  const ids=['tool-'+t,'dtool-'+t];
+  ids.forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add('active');});
+}
+
+// GALERIA
+function salvarNaGaleria(isDesafio){
+  if(!desenhoCanvas)return;
+  if(!currentUser){alert('Você precisa estar logada!');return;}
+  const img=desenhoCanvas.toDataURL('image/png');
+  const desafio=isDesafio?getDesafioSemana():null;
+  const now=new Date();
+  const semana=getSemanaNum();
+  galeriaDesenhos.unshift({
+    img,
+    user:currentUser.name,
+    data:now.toLocaleDateString('pt-BR'),
+    tipo:isDesafio?'desafio':'livre',
+    desafio:desafio?desafio.texto:null,
+    semana,
+  });
+  sv('nc3_galeria',galeriaDesenhos);
+  alert('✅ Desenho salvo na galeria!');
+  if(isDesafio)switchDesenhoTab('galeria');
+}
+
+function getSemanaNum(){
+  const now=new Date();
+  const inicio=new Date(now.getFullYear(),0,1);
+  return Math.floor((now-inicio)/(7*24*60*60*1000));
+}
+
+function renderGaleria(){
+  // Placar
+  const semanaAtual=getSemanaNum();
+  const placar={};
+  galeriaDesenhos.forEach(d=>{
+    if(d.semana===semanaAtual){
+      placar[d.user]=(placar[d.user]||0)+1;
+    }
+  });
+  const pc=document.getElementById('placarDesenho');
+  pc.innerHTML='<div style="font-family:\'Bangers\';color:var(--blue3);font-size:1rem;letter-spacing:1px;width:100%;margin-bottom:.3rem;">⭐ Pontuação desta semana:</div>';
+  if(!Object.keys(placar).length){
+    pc.innerHTML+='<p style="color:rgba(255,255,255,.4);font-size:.85rem;">Nenhum desenho esta semana ainda!</p>';
+  } else {
+    Object.entries(placar).sort((a,b)=>b[1]-a[1]).forEach(([u,pts])=>{
+      pc.innerHTML+=`<div class="placar-item">
+        <span>👤 ${u}</span>
+        <span class="placar-estrelas">${'⭐'.repeat(pts)}</span>
+        <span style="color:rgba(255,255,255,.5);font-size:.78rem;">${pts} desenho${pts>1?'s':''}</span>
+      </div>`;
+    });
+  }
+
+  // Grid
+  const g=document.getElementById('galeriaGrid');
+  g.innerHTML='';
+  if(!galeriaDesenhos.length){
+    g.innerHTML='<p style="color:rgba(255,255,255,.4);text-align:center;grid-column:1/-1;">Nenhum desenho ainda! 🎨</p>';
+    return;
+  }
+  galeriaDesenhos.forEach((d,i)=>{
+    const card=document.createElement('div');
+    card.className='galeria-card';
+    card.innerHTML=`
+      <img src="${d.img}" loading="lazy"/>
+      <div class="galeria-card-info">
+        <div class="galeria-card-tipo ${d.tipo==='desafio'?'tipo-desafio':'tipo-livre'}">
+          ${d.tipo==='desafio'?'⚡ Desafio':'✏️ Livre'}
+        </div>
+        <div class="galeria-card-user">👤 ${d.user} • ${d.data}</div>
+        ${d.desafio?`<div style="color:rgba(255,255,255,.45);font-size:.68rem;margin-top:2px;">${d.desafio.slice(0,40)}...</div>`:''}
+      </div>`;
+    card.onclick=()=>{
+      document.getElementById('modalDesenhoImg').src=d.img;
+      document.getElementById('modalDesenhoInfo').textContent=
+        (d.desafio?'⚡ '+d.desafio+' • ':'')+d.user+' • '+d.data;
+      document.getElementById('modalDesenho').style.display='flex';
+    };
+    g.appendChild(card);
+  });
+}
+
+// Fecha modal ao clicar fora
+document.getElementById('modalDesenho').onclick=function(e){
+  if(e.target===this) this.style.display='none';
+};
+
+// ══════════════════════════════════════════════════════
+// CUIDADOS
+// ══════════════════════════════════════════════════════
+let registros=ld('nc3_reg',[]);
+let graficoAtual='glicose';
+
+function switchCuidadosTab(tab){
+  ['registro','calc'].forEach(t=>{
+    document.getElementById('cuidados-'+t).style.display=t===tab?'block':'none';
+    const btn=document.getElementById('ctab-'+t);
+    if(btn) btn.className='news-tab'+(t===tab?' active':'');
+  });
+  if(tab==='registro'){
+    // Preenche data/hora atual
+    const now=new Date();
+    const local=new Date(now-now.getTimezoneOffset()*60000).toISOString().slice(0,16);
+    document.getElementById('regData').value=local;
+    renderRegistros();
+    renderGrafico('glicose');
+  }
+  if(tab==='calc'){
+    renderTabelaSinais();
+  }
+}
+
+// ── REFERÊNCIAS CLÍNICAS ──────────────────────────────
+const REF={
+  glicose:{
+    jejum:{min:70,max:99,alertaMin:60,alertaMax:125,perigoMax:200},
+    posRefeicao:{min:70,max:140,alertaMax:199,perigoMax:300},
+  },
+  pressao:{
+    normal:{sist:{min:90,max:120},diast:{min:60,max:80}},
+    alertaSist:140, alertaDiast:90,
+    perigoSist:160, perigoDiast:100,
+    baixaSist:90,   baixaDiast:60,
+  },
+  fc:{min:60,max:100,alertaMin:50,alertaMax:110,perigoMin:40,perigoMax:130},
+  sat:{min:95,alerta:92,perigo:88},
+};
+
+function avaliarGlicose(val,jejum){
+  const r=jejum?REF.glicose.jejum:REF.glicose.posRefeicao;
+  if(val>=r.perigoMax||val<(r.alertaMin||60)) return 'perigo';
+  if(val>r.alertaMax||val<r.min) return 'alerta';
+  return 'ok';
+}
+function avaliarPressao(s,d){
+  if(s>=REF.pressao.perigoSist||d>=REF.pressao.perigoDiast) return 'perigo';
+  if(s<REF.pressao.baixaSist||d<REF.pressao.baixaDiast) return 'perigo';
+  if(s>=REF.pressao.alertaSist||d>=REF.pressao.alertaDiast) return 'alerta';
+  return 'ok';
+}
+function avaliarFC(val){
+  if(val<=REF.fc.perigoMin||val>=REF.fc.perigoMax) return 'perigo';
+  if(val<REF.fc.alertaMin||val>REF.fc.alertaMax) return 'alerta';
+  return 'ok';
+}
+function avaliarSat(val){
+  if(val<REF.sat.perigo) return 'perigo';
+  if(val<REF.sat.alerta) return 'alerta';
+  return 'ok';
+}
+
+// ── ADICIONAR REGISTRO ────────────────────────────────
+function addRegistro(){
+  const glicose=parseFloat(document.getElementById('regGlicose').value)||null;
+  const jejum=document.getElementById('regJejum').checked;
+  const sist=parseFloat(document.getElementById('regSist').value)||null;
+  const diast=parseFloat(document.getElementById('regDiast').value)||null;
+  const fc=parseFloat(document.getElementById('regFC').value)||null;
+  const sat=parseFloat(document.getElementById('regSat').value)||null;
+  const obs=document.getElementById('regObs').value.trim();
+  const dataVal=document.getElementById('regData').value;
+
+  if(!glicose&&!sist&&!fc&&!sat){
+    alert('Preencha pelo menos um valor!');return;
+  }
+
+  const reg={
+    data:dataVal||new Date().toISOString(),
+    glicose,jejum,sist,diast,fc,sat,obs,
+    user:currentUser?currentUser.name:'',
+  };
+
+  registros.unshift(reg);
+  sv('nc3_reg',registros);
+
+  // Limpa campos
+  ['regGlicose','regSist','regDiast','regFC','regSat','regObs'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.value='';
+  });
+  document.getElementById('regJejum').checked=false;
+
+  renderRegistros();
+  renderGrafico(graficoAtual);
+}
+
+// ── RENDERIZAR REGISTROS ──────────────────────────────
+function renderRegistros(){
+  const c=document.getElementById('registroLista');
+  c.innerHTML='';
+
+  if(!registros.length){
+    c.innerHTML='<p style="color:rgba(255,255,255,.4);text-align:center;padding:1rem;">Nenhum registro ainda 💗</p>';
+    renderAlertas(null);
+    return;
+  }
+
+  renderAlertas(registros[0]);
+
+  registros.forEach((r,i)=>{
+    const d=new Date(r.data);
+    const dataStr=d.toLocaleDateString('pt-BR')+' às '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+
+    let cardClass='registro-card';
+    let temPerigo=false, temAlerta=false;
+
+    if(r.glicose){const av=avaliarGlicose(r.glicose,r.jejum);if(av==='perigo')temPerigo=true;if(av==='alerta')temAlerta=true;}
+    if(r.sist&&r.diast){const av=avaliarPressao(r.sist,r.diast);if(av==='perigo')temPerigo=true;if(av==='alerta')temAlerta=true;}
+    if(r.fc){const av=avaliarFC(r.fc);if(av==='perigo')temPerigo=true;if(av==='alerta')temAlerta=true;}
+    if(r.sat){const av=avaliarSat(r.sat);if(av==='perigo')temPerigo=true;if(av==='alerta')temAlerta=true;}
+
+    if(temPerigo) cardClass+=' perigo-card';
+    else if(temAlerta) cardClass+=' alerta-card';
+
+    const div=document.createElement('div');
+    div.className=cardClass;
+
+    let vals='';
+    if(r.glicose){
+      const av=avaliarGlicose(r.glicose,r.jejum);
+      vals+=`<span class="reg-val val-${av}">🩸 ${r.glicose} mg/dL${r.jejum?' (jejum)':''}</span>`;
+    }
+    if(r.sist&&r.diast){
+      const av=avaliarPressao(r.sist,r.diast);
+      vals+=`<span class="reg-val val-${av}">💓 ${r.sist}/${r.diast} mmHg</span>`;
+    }
+    if(r.fc){
+      const av=avaliarFC(r.fc);
+      vals+=`<span class="reg-val val-${av}">❤️ ${r.fc} bpm</span>`;
+    }
+    if(r.sat){
+      const av=avaliarSat(r.sat);
+      vals+=`<span class="reg-val val-${av}">🫁 ${r.sat}%</span>`;
+    }
+
+    div.innerHTML=`
+      <div class="reg-data">📅 ${dataStr}${r.user?' • '+r.user:''}</div>
+      <div class="reg-valores">${vals}</div>
+      ${r.obs?`<div class="reg-obs">📝 ${r.obs}</div>`:''}
+      ${currentUser&&currentUser.adm?`<button class="reg-del" onclick="delRegistro(${i})">✕</button>`:''}
+    `;
+    c.appendChild(div);
+  });
+}
+
+function delRegistro(i){
+  if(!confirm('Remover este registro?'))return;
+  registros.splice(i,1);
+  sv('nc3_reg',registros);
+  renderRegistros();
+  renderGrafico(graficoAtual);
+}
+
+// ── ALERTAS ───────────────────────────────────────────
+function renderAlertas(reg){
+  const c=document.getElementById('alertasSinais');
+  c.innerHTML='';
+  if(!reg){return;}
+
+  const alertas=[];
+
+  if(reg.glicose){
+    const av=avaliarGlicose(reg.glicose,reg.jejum);
+    if(av==='perigo') alertas.push({tipo:'perigo',msg:`⚠️ Glicose ${reg.glicose} mg/dL — ATENÇÃO! Valor crítico. Consulte um médico.`});
+    else if(av==='alerta') alertas.push({tipo:'aviso',msg:`🔶 Glicose ${reg.glicose} mg/dL — Levemente fora do normal. Monitorar.`});
+    else alertas.push({tipo:'ok',msg:`✅ Glicose ${reg.glicose} mg/dL — Dentro do esperado.`});
+  }
+  if(reg.sist&&reg.diast){
+    const av=avaliarPressao(reg.sist,reg.diast);
+    if(av==='perigo') alertas.push({tipo:'perigo',msg:`⚠️ Pressão ${reg.sist}/${reg.diast} mmHg — ATENÇÃO! Valor crítico.`});
+    else if(av==='alerta') alertas.push({tipo:'aviso',msg:`🔶 Pressão ${reg.sist}/${reg.diast} mmHg — Elevada. Monitorar.`});
+    else alertas.push({tipo:'ok',msg:`✅ Pressão ${reg.sist}/${reg.diast} mmHg — Normal.`});
+  }
+  if(reg.fc){
+    const av=avaliarFC(reg.fc);
+    if(av==='perigo') alertas.push({tipo:'perigo',msg:`⚠️ FC ${reg.fc} bpm — ATENÇÃO! Frequência cardíaca crítica.`});
+    else if(av==='alerta') alertas.push({tipo:'aviso',msg:`🔶 FC ${reg.fc} bpm — Fora do ideal. Monitorar.`});
+    else alertas.push({tipo:'ok',msg:`✅ FC ${reg.fc} bpm — Normal.`});
+  }
+  if(reg.sat){
+    const av=avaliarSat(reg.sat);
+    if(av==='perigo') alertas.push({tipo:'perigo',msg:`⚠️ SpO₂ ${reg.sat}% — ATENÇÃO! Saturação crítica.`});
+    else if(av==='alerta') alertas.push({tipo:'aviso',msg:`🔶 SpO₂ ${reg.sat}% — Abaixo do ideal.`});
+    else alertas.push({tipo:'ok',msg:`✅ SpO₂ ${reg.sat}% — Normal.`});
+  }
+
+  alertas.forEach(a=>{
+    c.innerHTML+=`<div class="alerta-box ${a.tipo}">${a.msg}</div>`;
+  });
+}
+
+// ── GRÁFICO ───────────────────────────────────────────
+function switchGrafico(tipo){
+  graficoAtual=tipo;
+  ['glicose','pressao','fc'].forEach(t=>{
+    const btn=document.getElementById('gtab-'+t);
+    if(btn) btn.className='news-tab'+(t===tipo?' active':'');
+  });
+  renderGrafico(tipo);
+}
+
+function renderGrafico(tipo){
+  const canvas=document.getElementById('graficoCanvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const W=canvas.offsetWidth||400;
+  canvas.width=W; canvas.height=120;
+
+  ctx.clearRect(0,0,W,120);
+  ctx.fillStyle='rgba(255,255,255,.03)';
+  ctx.fillRect(0,0,W,120);
+
+  // Pega últimos 10 registros que têm o valor
+  const dados=registros.filter(r=>{
+    if(tipo==='glicose') return r.glicose;
+    if(tipo==='pressao') return r.sist&&r.diast;
+    if(tipo==='fc') return r.fc;
+  }).slice(0,10).reverse();
+
+  if(!dados.length){
+    ctx.fillStyle='rgba(168,200,232,.3)';
+    ctx.font='13px Nunito';
+    ctx.textAlign='center';
+    ctx.fillText('Sem dados suficientes',W/2,65);
+    document.getElementById('graficoLegenda').textContent='';
+    return;
+  }
+
+  const pad=20;
+  const w=W-pad*2;
+  const h=80;
+  const top=20;
+
+  let vals=[], cores=[], labels=[];
+  if(tipo==='glicose'){
+    vals=[dados.map(r=>r.glicose)];
+    cores=['#A8C8E8'];
+    labels=['Glicose (mg/dL)'];
+  } else if(tipo==='pressao'){
+    vals=[dados.map(r=>r.sist),dados.map(r=>r.diast)];
+    cores=['#e74c3c','#2E6DA4'];
+    labels=['Sistólica','Diastólica'];
+  } else {
+    vals=[dados.map(r=>r.fc)];
+    cores=['#e74c3c'];
+    labels=['FC (bpm)'];
+  }
+
+  // Min/max para escala
+  const allVals=vals.flat();
+  const mn=Math.min(...allVals)*0.9;
+  const mx=Math.max(...allVals)*1.1;
+
+  function toY(v){return top+h-(((v-mn)/(mx-mn))*h);}
+  function toX(i,total){return pad+i*(w/(total-1||1));}
+
+  vals.forEach((serie,si)=>{
+    ctx.beginPath();
+    ctx.strokeStyle=cores[si];
+    ctx.lineWidth=2;
+    ctx.lineCap='round';
+    serie.forEach((v,i)=>{
+      const x=toX(i,serie.length);
+      const y=toY(v);
+      if(i===0) ctx.moveTo(x,y);
+      else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+
+    // Pontos
+    serie.forEach((v,i)=>{
+      const x=toX(i,serie.length);
+      const y=toY(v);
+      ctx.beginPath();
+      ctx.arc(x,y,3,0,Math.PI*2);
+      ctx.fillStyle=cores[si];
+      ctx.fill();
+      // Valor
+      ctx.fillStyle='rgba(255,255,255,.7)';
+      ctx.font='10px Nunito';
+      ctx.textAlign='center';
+      ctx.fillText(v,x,y-7);
+    });
+  });
+
+  // Legenda
+  const leg=labels.map((l,i)=>`<span style="color:${cores[i]};margin-right:8px;">— ${l}</span>`).join('');
+  document.getElementById('graficoLegenda').innerHTML=leg;
+}
+
+// ── CALCULADORAS ──────────────────────────────────────
+function showResult(id,texto,tipo){
+  const el=document.getElementById(id);
+  el.textContent=texto;
+  el.className='calc-result '+tipo;
+  el.style.display='block';
+}
+
+function calcIMC(){
+  const p=parseFloat(document.getElementById('imcPeso').value);
+  const a=parseFloat(document.getElementById('imcAltura').value);
+  if(!p||!a||a<=0){showResult('imcResult','Preencha peso e altura corretamente.','info');return;}
+  const imc=p/(a*a);
+  let status,tipo;
+  if(imc<18.5){status='Abaixo do peso';tipo='alerta';}
+  else if(imc<25){status='Peso normal';tipo='ok';}
+  else if(imc<30){status='Sobrepeso';tipo='alerta';}
+  else if(imc<35){status='Obesidade grau I';tipo='perigo';}
+  else if(imc<40){status='Obesidade grau II';tipo='perigo';}
+  else{status='Obesidade grau III';tipo='perigo';}
+  showResult('imcResult',`IMC: ${imc.toFixed(1)} kg/m² — ${status}`,'calc-result '+tipo);
+  document.getElementById('imcResult').className='calc-result '+tipo;
+  document.getElementById('imcResult').style.display='block';
+}
+
+function calcGotejamento(){
+  const vol=parseFloat(document.getElementById('goteVol').value);
+  const tempo=parseFloat(document.getElementById('goteTempo').value);
+  const equipo=parseInt(document.getElementById('goteEquipo').value);
+  if(!vol||!tempo){showResult('goteResult','Preencha volume e tempo.','info');return;}
+  const gts=(vol*equipo)/(tempo*60);
+  const ml=vol/tempo;
+  showResult('goteResult',
+    `${gts.toFixed(1)} gotas/min  •  ${ml.toFixed(1)} mL/h`,
+    'ok'
+  );
+}
+
+function calcDose(){
+  const pres=parseFloat(document.getElementById('dosePrescrita').value);
+  const disp=parseFloat(document.getElementById('doseDisponivel').value);
+  const vol=parseFloat(document.getElementById('doseVolume').value);
+  if(!pres||!disp||!vol){showResult('doseResult','Preencha todos os campos.','info');return;}
+  const resultado=(pres/disp)*vol;
+  showResult('doseResult',
+    `Administrar: ${resultado.toFixed(2)} mL`,
+    resultado>vol*2?'alerta':'ok'
+  );
+}
+
+// ── TABELA DE SINAIS VITAIS ───────────────────────────
+function renderTabelaSinais(){
+  const dados=[
+    {fx:'Recém-nascido',fc:'120–160',fr:'30–60',pa:'60–90/30–60',tax:'36,5–37,5'},
+    {fx:'Lactente (1m–1a)',fc:'100–160',fr:'25–50',pa:'70–100/50–65',tax:'36,5–37,5'},
+    {fx:'Pré-escolar (1–5a)',fc:'80–120',fr:'20–30',pa:'80–110/50–80',tax:'36,5–37,5'},
+    {fx:'Escolar (6–12a)',fc:'70–110',fr:'18–25',pa:'85–120/55–80',tax:'36,0–37,5'},
+    {fx:'Adolescente (13–18a)',fc:'60–100',fr:'12–20',pa:'90–130/60–85',tax:'36,0–37,5'},
+    {fx:'Adulto',fc:'60–100',fr:'12–20',pa:'100–140/60–90',tax:'35,5–37,5'},
+    {fx:'Idoso (>60a)',fc:'60–100',fr:'12–20',pa:'até 150/90',tax:'35,5–37,0'},
+  ];
+  const tb=document.getElementById('tabelaBody');
+  tb.innerHTML='';
+  dados.forEach(d=>{
+    tb.innerHTML+=`<tr>
+      <td>${d.fx}</td>
+      <td>${d.fc}</td>
+      <td>${d.fr}</td>
+      <td>${d.pa}</td>
+      <td>${d.tax}</td>
+    </tr>`;
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// NOTÍCIAS — RSS automático
+// ══════════════════════════════════════════════════════
+const FEEDS={
+  jogos:['https://www.ign.com/articles.rss','https://jovemnerd.com.br/categoria/nerdcast/feed/'],
+  enfermagem:['https://g1.globo.com/rss/g1/ciencia-e-saude/','https://saude.abril.com.br/feed/'],
+  arte:['https://www.hypeness.com.br/feed/','https://www.designculture.com.br/feed/'],
+  tech:['https://www.tecmundo.com.br/rss','https://olhardigital.com.br/feed/'],
+  filmes:['https://jovemnerd.com.br/categoria/nerdbunker/feed/','https://cinepop.com.br/feed'],
+  series:['https://jovemnerd.com.br/categoria/nerdlista/feed/','https://cinepop.com.br/feed'],
+};
+
+const CAT_INFO={
+  jogos:{label:'🎮 Jogos',cls:'tag-jogos',emoji:'🎮'},
+  enfermagem:{label:'🏥 Enfermagem',cls:'tag-enfermagem',emoji:'🏥'},
+  arte:{label:'🎨 Arte',cls:'tag-arte',emoji:'🎨'},
+  tech:{label:'💻 Tech',cls:'tag-tech',emoji:'💻'},
+  filmes:{label:'🎬 Filmes',cls:'tag-filmes',emoji:'🎬'},
+  series:{label:'📺 Séries',cls:'tag-series',emoji:'📺'},
+};
+
+const POST_IT_COLORS={
+  jogos:'#fffde7',enfermagem:'#fdeef4',
+  arte:'#fff8e1',tech:'#e8f4fd',
+  filmes:'#f3e5f5',series:'#fdecea'
+};
+
+const newsCache={};
+
+async function loadNews(btn,cat){
+  document.querySelectorAll('.news-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+
+  if(newsCache[cat]){renderNewsCards(newsCache[cat],cat);return;}
+
+  document.getElementById('newsLoading').style.display='block';
+  document.getElementById('newsGrid').innerHTML='';
+
+  let allItems=[];
+
+  for(const url of FEEDS[cat]){
+    try{
+      const controller=new AbortController();
+      const timer=setTimeout(()=>controller.abort(),8000);
+      const res=await fetch(
+        'https://api.allorigins.win/get?url='+encodeURIComponent(url),
+        {signal:controller.signal}
+      );
+      clearTimeout(timer);
+      const data=await res.json();
+      allItems=allItems.concat(parseRSS(data.contents,cat));
+    }catch(e){
+      // feed falhou, continua
+    }
+  }
+
+  if(!allItems.length) allItems=getFallback(cat);
+  allItems=allItems.slice(0,20);
+  newsCache[cat]=allItems;
+
+  document.getElementById('newsLoading').style.display='none';
+  renderNewsCards(allItems,cat);
+}
+
+function parseRSS(xml,cat){
+  try{
+    const doc=new DOMParser().parseFromString(xml,'text/xml');
+    return[...doc.querySelectorAll('item')].map(item=>({
+      title:item.querySelector('title')?.textContent?.trim()||'',
+      desc:(item.querySelector('description')?.textContent||'').replace(/<[^>]+>/g,'').replace(/&[a-z]+;/g,' ').trim().slice(0,400),
+      link:item.querySelector('link')?.textContent?.trim()||'',
+      date:item.querySelector('pubDate')?.textContent?new Date(item.querySelector('pubDate').textContent).toLocaleDateString('pt-BR'):'',
+      cat
+    })).filter(i=>i.title.length>5);
+  }catch(e){return[];}
+}
+
+function renderNewsCards(items,cat){
+  const info=CAT_INFO[cat];
+  const g=document.getElementById('newsGrid');
+  g.innerHTML='';
+  if(!items.length){
+    g.innerHTML='<p style="color:rgba(255,255,255,.4);text-align:center;grid-column:1/-1;padding:2rem;">Não foi possível carregar. Tente novamente! 🌙</p>';
+    return;
+  }
+  items.forEach(item=>{
+    const card=document.createElement('div');
+    card.className='news-card';
+    card.innerHTML=`
+      <div class="nc-emoji">${info.emoji}</div>
+      <span class="nc-tag ${info.cls}">${info.label}</span>
+      <div class="nc-title">${item.title}</div>
+      <div class="nc-date">${item.date||'Recente'}</div>
+      <div class="nc-tap">Toque para ler ✨</div>`;
+    card.onclick=()=>openPostIt(item,info);
+    g.appendChild(card);
+  });
+}
+
+function getFallback(cat){
+  const f={
+    jogos:[
+      {title:'Os jogos mais esperados de 2025',desc:'De RPGs épicos a plataformas indie, 2025 promete ser um ano incrível para os games. A indústria está mais criativa do que nunca.',link:'',date:'2025',cat:'jogos'},
+      {title:'Por que Stardew Valley ainda conquista corações?',desc:'O jogo de fazendinha criado por uma única pessoa já vendeu mais de 30 milhões de cópias. Psicólogos explicam o efeito terapêutico.',link:'',date:'2025',cat:'jogos'},
+      {title:'E-sports feminino: crescimento e representatividade',desc:'Torneios femininos e mistos estão transformando o cenário competitivo. A diversidade está chegando aos games.',link:'',date:'2025',cat:'jogos'},
+    ],
+    enfermagem:[
+      {title:'Autocuidado para quem cuida: estratégias para enfermeiros',desc:'O burnout atinge mais de 70% dos profissionais de saúde. Especialistas recomendam rituais diários de descanso e conexões afetivas.',link:'',date:'2025',cat:'enfermagem'},
+      {title:'Florence Nightingale: a mulher que reinventou a medicina',desc:'Com lamparina na mão, ela percorreu hospitais de guerra e provou que higiene salva vidas durante a Guerra da Crimeia.',link:'',date:'Curiosidade',cat:'enfermagem'},
+      {title:'IA na enfermagem: tecnologia a serviço do cuidado humano',desc:'Algoritmos identificam padrões em sinais vitais com velocidade sobre-humana. A tecnologia libera o enfermeiro para ser mais presente.',link:'',date:'2025',cat:'enfermagem'},
+    ],
+    arte:[
+      {title:'Procreate vs papel: o debate eterno dos artistas',desc:'Cada meio tem sua magia. O digital oferece desfazer infinito, o papel oferece textura real. Use os dois!',link:'',date:'2025',cat:'arte'},
+      {title:'Webtoon: a revolução dos quadrinhos digitais',desc:'Artistas independentes publicam histórias que alcançam milhões de leitores. A barreira de entrada caiu.',link:'',date:'2025',cat:'arte'},
+      {title:'Arteterapia: por que desenhar cura a mente',desc:'Hospitais adotam ateliers de arte para pacientes. Criar ativa o sistema de recompensa do cérebro e reduz o cortisol.',link:'',date:'Curiosidade',cat:'arte'},
+    ],
+    tech:[
+      {title:'Aprenda programação do zero: por onde começar',desc:'HTML, CSS e JavaScript são a porta de entrada. Com consistência e curiosidade, qualquer pessoa pode criar coisas digitais.',link:'',date:'2025',cat:'tech'},
+      {title:'Como proteger seus dados online em 5 passos',desc:'Senha forte, autenticação em dois fatores, não clicar em links suspeitos: hábitos simples que fazem enorme diferença.',link:'',date:'2025',cat:'tech'},
+      {title:'Curiosidade: a internet tem quantos anos?',desc:'A ARPANET foi criada em 1969. A World Wide Web surgiu em 1991, criada por Tim Berners-Lee.',link:'',date:'Curiosidade',cat:'tech'},
+    ],
+    filmes:[
+      {title:'Studio Ghibli: por que os filmes de Miyazaki curam a alma?',desc:'Seus filmes celebram a natureza, a imaginação e a bondade — adultos precisam disso tanto quanto crianças.',link:'',date:'2025',cat:'filmes'},
+      {title:'Representatividade LGBTQIA+ no cinema em 2025',desc:'O cinema mundial abraça narrativas diversas e prova que histórias de amor ressoam com qualquer pessoa.',link:'',date:'2025',cat:'filmes'},
+      {title:'5 filmes que todo estudante de saúde deveria ver',desc:'De Patch Adams a Wit, o cinema explora o lado humano da medicina com profundidade e emoção.',link:'',date:'Curiosidade',cat:'filmes'},
+    ],
+    series:[
+      {title:'K-dramas para assistir em 2025',desc:'Do romance ao thriller sobrenatural, as séries coreanas conquistaram o mundo com produções impecáveis.',link:'',date:'2025',cat:'series'},
+      {title:'Arcane: o que fez a série ser tão especial',desc:'A animação da Netflix mostrou que adaptações de jogos podem ser obras de arte. Roteiro e animação impecáveis.',link:'',date:'Curiosidade',cat:'series'},
+      {title:'Grey\'s Anatomy: o que é real e o que é drama',desc:'Enfermeiras assistem à série e comentam o que acerta e erra sobre a rotina hospitalar.',link:'',date:'2025',cat:'series'},
+    ],
+  };
+  return f[cat]||[];
+}
+
+function openPostIt(item,info){
+  const modal=document.getElementById('postItModal');
+  const postIt=document.getElementById('postIt');
+  const bg=POST_IT_COLORS[item.cat]||'#fffde7';
+  postIt.style.background=bg;
+  document.getElementById('postItTag').textContent=info.label;
+  document.getElementById('postItTitle').textContent=item.title;
+  document.getElementById('postItBody').textContent=item.desc||'Clique em "Ler mais" para ver o conteúdo completo.';
+  document.getElementById('postItDate').textContent=item.date?'📅 '+item.date:'';
+  document.getElementById('postItLink').innerHTML=item.link
+    ?`<a href="${item.link}" target="_blank" rel="noopener" style="color:var(--blue2);font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:700;">🔗 Ler notícia completa</a>`:'';
+  const rot=(Math.random()*4-2).toFixed(1);
+  postIt.style.transform=`rotate(${rot}deg)`;
+  postIt.style.animation='none';
+  requestAnimationFrame(()=>{postIt.style.animation='postItPop .25s cubic-bezier(.34,1.56,.64,1)';});
+  modal.style.display='flex';
+  modal.onclick=e=>{if(e.target===modal)closePostIt();};
+}
+
+function closePostIt(){
+  document.getElementById('postItModal').style.display='none';
+}
+
+// ══════════════════════════════════════════════════════
+// ADM — USUÁRIOS
+// ══════════════════════════════════════════════════════
+function renderUsers(){
+  if(!currentUser||!currentUser.adm)return;
+  const users=ld('nc_users',[]);
+  const c=document.getElementById('userList');c.innerHTML='';
+  users.forEach((u,i)=>{
+    c.innerHTML+=`<div class="user-row">
+      <span>${u.name}</span>
+      <span class="role ${u.adm?'adm':'user'}">${u.adm?'Amor da Lia':'Amor da Nayelle'}</span>
+      ${(!u.adm||users.filter(x=>x.adm).length>1)?`<button class="del-user" onclick="delUser(${i})">✕</button>`:''}
+    </div>`;
+  });
+}
+
+function addUser(){
+  if(!currentUser||!currentUser.adm)return;
+  const name=document.getElementById('newUname').value.trim();
+  const pass=document.getElementById('newUpass').value.trim();
+  const adm=document.getElementById('newUadm').checked;
+  if(!name||!pass){alert('Preencha nome e senha.');return;}
+  const users=ld('nc_users',[]);
+  if(users.find(u=>u.name.toLowerCase()===name.toLowerCase())){alert('Já existe um usuário com esse nome.');return;}
+  users.push({name,pass,adm});
+  sv('nc_users',users);
+  document.getElementById('newUname').value='';
+  document.getElementById('newUpass').value='';
+  document.getElementById('newUadm').checked=false;
+  renderUsers();
+}
+
+function delUser(i){
+  if(!currentUser||!currentUser.adm)return;
+  const users=ld('nc_users',[]);
+  if(users[i].name===currentUser.name){alert('Você não pode remover seu próprio usuário.');return;}
+  if(!confirm('Remover usuário '+users[i].name+'?'))return;
+  users.splice(i,1);sv('nc_users',users);renderUsers();
+}
+
+// Inicia estrelas da tela de login
+initStars('loginStars');
+</script>
+</body>
+</html>
