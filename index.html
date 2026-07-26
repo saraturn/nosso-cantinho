@@ -1664,36 +1664,124 @@ function tab(btn,id){
 // ══════════════════════════════════════════════════════
 // MEMÓRIAS
 // ══════════════════════════════════════════════════════
-let mems=ld('nc3_m',[]);
-if(!mems.length){
-  mems.push({img:'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=400',cap:'Nossa primeira memória 💙',r:-2});
-  sv('nc3_m',mems);
+let mems=[];
+
+async function loadMem(){
+
+  const { data, error } = await supabase
+    .from('memorias')
+    .select('*')
+    .order('id', { ascending:false });
+
+  if(error){
+    console.error(error);
+    alert("Erro ao carregar memórias");
+    return;
+  }
+
+  mems = data.map(m => ({
+    img: m.foto,
+    cap: m.titulo,
+    r: (Math.random()*6-3).toFixed(1)
+  }));
+
+  renderMem();
+
+}
+
+loadMem();
 }
 function addMem(){
-  const file=document.getElementById('mfile').files[0];
+ const file=document.getElementById('mfile').files[0];
   const cap=document.getElementById('mcap').value.trim();
-  if(!file){alert('Escolhe uma foto! 📷');return;}
-  if(!cap){alert('Escreva uma legenda! ✍️');return;}
-  const r=new FileReader();
-  r.onload=e=>{
-    mems.unshift({img:e.target.result,cap,r:(Math.random()*6-3).toFixed(1)});
-    sv('nc3_m',mems);
-    document.getElementById('mfile').value='';
-    document.getElementById('mcap').value='';
-    renderMem();
-  };
-  r.readAsDataURL(file);
-}
-function delMem(i){if(!confirm('Remover?'))return;mems.splice(i,1);sv('nc3_m',mems);renderMem();}
-function renderMem(){
-  const g=document.getElementById('mgrid');g.innerHTML='';
-  if(!mems.length){g.innerHTML='<p style="color:rgba(255,255,255,.4);padding:1rem;text-align:center;width:100%;">Nenhuma memória ainda 📷</p>';return;}
-  mems.forEach((m,i)=>{
-    const c=document.createElement('div');
-    c.className='card';c.style.setProperty('--r',m.r+'deg');
-    c.innerHTML=`<div class="polaroid"><div class="tape"></div><button class="mdel" onclick="delMem(${i})">✕</button><img class="pimg" src="${m.img}" loading="lazy"/><div class="caption">${m.cap}</div></div>`;
-    g.appendChild(c);
+
+  if(!file){
+    alert('Escolhe uma foto! 📷');
+    return;
+  }
+
+  if(!cap){
+    alert('Escreva uma legenda! ✍️');
+    return;
+  }
+
+  // cria um nome único para a imagem
+  const nomeArquivo = `${Date.now()}-${file.name}`;
+
+  // envia a foto para o Storage do Supabase
+  const { data: uploadData, error: uploadError } = await supabase
+    .storage
+    .from('fotos')
+    .upload(nomeArquivo, file);
+
+  if(uploadError){
+    console.error(uploadError);
+    alert('Erro ao enviar foto 😢');
+    return;
+  }
+
+  // pega o endereço público da foto
+  const { data: urlData } = supabase
+    .storage
+    .from('fotos')
+    .getPublicUrl(nomeArquivo);
+
+  const urlFoto = urlData.publicUrl;
+
+  // salva a memória no banco
+  const { error: dbError } = await supabase
+    .from('memorias')
+    .insert([
+      {
+        titulo: cap,
+        descricao: '',
+        foto: urlFoto,
+        data: new Date()
+      }
+    ]);
+
+
+  if(dbError){
+    console.error(dbError);
+    alert('Erro ao salvar memória 😢');
+    return;
+  }
+
+  // atualiza visualmente
+  mems.unshift({
+    img:urlFoto,
+    cap:cap,
+    r:(Math.random()*6-3).toFixed(1)
   });
+
+  document.getElementById('mfile').value='';
+  document.getElementById('mcap').value='';
+
+  renderMem();
+
+  alert('Memória guardada 💙');
+
+}
+async function delMem(i){
+ if(!confirm('Remover?')) return;
+
+ const memoria = mems[i];
+
+ const { error } = await supabase
+ .from('memorias')
+ .delete()
+ .eq('foto', memoria.img);
+
+ if(error){
+   console.error(error);
+   alert("Erro ao remover");
+   return;
+ }
+
+ mems.splice(i,1);
+
+ renderMem();
+
 }
 
 // ══════════════════════════════════════════════════════
@@ -3073,6 +3161,20 @@ function delUser(i){
 
 // Inicia estrelas da tela de login
 initStars('loginStars');
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const SUPABASE_URL = "https://uxsampkqojjsmlxvsrvr.supabase.co";
+
+const SUPABASE_KEY = "sb_publishable_BxLokoQPPGbo3GLc23KYqw_vnzY0H02";
+
+const supabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
 </script>
 </body>
 </html>
